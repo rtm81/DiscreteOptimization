@@ -1,9 +1,9 @@
-import java.io.*;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The class <code>Solver</code> is an implementation of a greedy algorithm to solve the knapsack problem.
@@ -41,7 +41,24 @@ public class Solver {
             return;
         }
         
-        // read the lines out of the file
+        ProblemData problemData = getProblemDataFromFile(fileName);
+
+        int[] taken = new int[problemData.items];
+        
+        SolverInterface greedy = new Dynamic();
+        int value = greedy.solve(problemData, taken);
+        
+        // prepare the solution in the specified output format
+        System.out.println(value+" 0");
+        for(int i=0; i < taken.length; i++){
+            System.out.print(taken[i]+" ");
+        }
+        System.out.println("");
+    }
+
+    public static ProblemData getProblemDataFromFile(String fileName)
+			throws FileNotFoundException, IOException {
+		// read the lines out of the file
         List<String> lines = new ArrayList<String>();
 
         BufferedReader input =  new BufferedReader(new FileReader(fileName));
@@ -71,64 +88,8 @@ public class Solver {
           values[i-1] = Integer.parseInt(parts[0]);
           weights[i-1] = Integer.parseInt(parts[1]);
         }
-
-        int[] taken = new int[items];
-        int value = solve(items, capacity, values, weights, taken);
-        
-        // prepare the solution in the specified output format
-        System.out.println(value+" 0");
-        for(int i=0; i < items; i++){
-            System.out.print(taken[i]+" ");
-        }
-        System.out.println("");        
-    }
-
-	private static int solve(int items, int capacity, int[] values,
-			int[] weights, int[] taken) {
-		int value = 0;
-        int weight = 0;
-		
-        double[] v_per_w = new double[items];
-        List<ValuePerKilo> v_per_w_index = new LinkedList<Solver.ValuePerKilo>();
-        for(int i=0; i < items; i++){
-        	v_per_w[i] = ((double)values[i]) / ((double)weights[i]);
-        	v_per_w_index.add(new ValuePerKilo(i, v_per_w[i]));
-        }
-        Collections.sort(v_per_w_index, Collections.reverseOrder());
-        if (debug) {
-        	System.err.println(v_per_w_index);
-        }
-        
-        for (ValuePerKilo valuePerKilo : v_per_w_index) {
-        	int i = valuePerKilo.index;
-	      if(weight + weights[i] <= capacity){
-	          taken[i] = 1;
-	          value += values[i];
-	          weight += weights[i];
-	      } else {
-	          taken[i] = 0;
-	      }
-		}
-		return value;
+        ProblemData problemData = new ProblemData(items, capacity, values, weights);
+		return problemData;
 	}
-    
-    private static class ValuePerKilo implements Comparable<ValuePerKilo>{
-    	private final int index;
-    	private final double value;
-    	
-    	public ValuePerKilo(int index, double value) {
-			this.index = index;
-			this.value = value;
-		}
 
-		@Override
-		public int compareTo(ValuePerKilo o) {
-			return Double.valueOf(value).compareTo(Double.valueOf(o.value));
-		}
-		
-		@Override
-		public String toString() {
-			return "["+index+", "+value+"]";
-		}
-    }
 }
