@@ -1,4 +1,5 @@
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,6 +11,8 @@ import com.google.common.primitives.Ints;
 
 
 public class Solver {
+	
+	static boolean visualize = false;
 
 	/**
 	 * The main class
@@ -40,6 +43,88 @@ public class Solver {
 			return;
 		}
 		
+		ProblemData problemData = getProblemDataFromFile(fileName);
+		
+
+		TourConfiguration configuration = TourConfiguration.create(problemData);
+
+//		calculateDistanceMatrix(nodeCount, points);
+		
+		
+		configuration.setStep(0, 0);
+		for (int i = 1; i < problemData.getProblemSize(); i++) {
+			
+			double[] distances = new double[problemData.getProblemSize()];
+			for (int j = 0; j < problemData.getProblemSize(); j++) {
+				if (configuration.contains(j) || i == j) {
+					distances[j] = Double.NaN;
+					continue;
+				}
+				distances[j] = problemData.get(configuration.get(i - 1)).distance(problemData.get(j));
+			}
+			configuration.setStep(i, smallest(distances));
+		}
+
+		// 2-opt
+		int numberOfNodesEligibleToBeSwapped = problemData.getProblemSize();
+		int numberOfSwaps = 0;
+		start_again:
+		while (true) {
+			if (numberOfSwaps > 10000) {
+				break;
+			}
+			double best_distance = configuration.calculateTourLength();
+			for (int i = 0; i < numberOfNodesEligibleToBeSwapped - 1; i++) {
+				for (int k = i + 1; k < numberOfNodesEligibleToBeSwapped; k++) {
+					TourConfiguration new_route = optSwap(configuration, i, k);
+
+					double new_distance = new_route.calculateTourLength();
+					if (new_distance < best_distance) {
+						configuration = new_route;
+						numberOfSwaps++;
+						continue start_again;
+					}
+				}
+			}
+			break;
+		}
+		
+		// calculate the length of the tour
+		double obj = configuration.calculateTourLength();
+
+		// prepare the solution in the specified output format
+		System.out.println(obj + " 0");
+		for (int i = 0; i < problemData.getProblemSize(); i++) {
+			System.out.print(configuration.get(i) + " ");
+		}
+		System.out.println("");
+		
+		if (visualize) {
+			Visualization visualization = new Visualization(configuration, problemData);
+			while(true);
+		}
+	}
+
+	private static TourConfiguration optSwap(TourConfiguration configuration,
+			int i, int k) {
+		TourConfiguration new_route = TourConfiguration.create(configuration);
+		// 1. take route[0] to route[i-1] and add them in order to new_route
+		for (int j = 0; j < i; j++) {
+			new_route.setStep(j, configuration.get(j));
+		}
+		// 2. take route[i] to route[k] and add them in reverse order to
+		// new_route
+		for (int j = i; j <= k; j++) {
+			new_route.setStep(j, configuration.get(k - (j - i)));
+		}
+		// 3. take route[k+1] to end and add them in order to new_route
+		for (int j = k + 1; j < configuration.getSize(); j++) {
+			new_route.setStep(j, configuration.get(j));
+		}
+		return new_route;
+	}
+
+	private static ProblemData getProblemDataFromFile(String fileName) throws IOException {
 		List<String> lines = new ArrayList<String>();
 
 		BufferedReader input = new BufferedReader(new FileReader(fileName));
@@ -63,71 +148,27 @@ public class Solver {
 			String[] node = line.split("\\s+");
 			points.add(new Point(Float.valueOf(node[0]), Float.valueOf(node[1])));
 		}
+		return new ProblemData(points);
+	}
 
-//		double [] [] distancMatrix = new double[nodeCount][nodeCount];
-//		for (int i = 0; i < distancMatrix.length; i++) {
-//			for (int j = 0; j < distancMatrix.length; j++) {
-//				if (i == j) {
-//					distancMatrix[i][j] = Double.NaN;
-//					continue;
-//				}
-//				distancMatrix[i][j] = distance(points.get(i), points.get(j));
-//			}
-//		}
-		
-//		System.out.println(Arrays.deepToString(distancMatrix));
-		
-		
-		// build a trivial solution
-		// visit the nodes in the order they appear in the file
-		int[] solution = new int[nodeCount];
-		solution[0] = 0;
-		for (int i = 1; i < solution.length; i++) {
-			
-			double[] distances = new double[nodeCount];
-			for (int j = 0; j < nodeCount; j++) {
-				if (Ints.contains(solution, j) || i == j) {
-					distances[j] = Double.NaN;
+
+
+	private static void calculateDistanceMatrix(int nodeCount,
+			List<Point> points) {
+		double [] [] distancMatrix = new double[nodeCount][nodeCount];
+		for (int i = 0; i < distancMatrix.length; i++) {
+			for (int j = 0; j < distancMatrix.length; j++) {
+				if (i == j) {
+					distancMatrix[i][j] = Double.NaN;
 					continue;
 				}
-				distances[j] = distance(points.get(solution[i-1]), points.get(j));
+				distancMatrix[i][j] = points.get(i).distance(points.get(j));
 			}
-			solution[i] = smallest(distances);
 		}
-
-		// calculate the length of the tour
-		double obj = distance(points.get(solution[nodeCount - 1]), points.get(solution[0]));
-		for (int i = 0; i < solution.length - 1; i++) {
-			obj += distance(points.get(solution[i]), points.get(solution[i + 1]));
-		}
-
-		// prepare the solution in the specified output format
-
-		System.out.println(obj + " 0");
-		for (int i = 0; i < solution.length; i++) {
-			System.out.print(solution[i] + " ");
-		}
-		System.out.println("");
+		System.out.println(Arrays.deepToString(distancMatrix));
 	}
 
-	public static double distance(Point p1, Point p2) {
-		return distance(p1.x, p1.y, p2.x, p2.y);
-	}
-	public static double distance(float x1, float y1, float x2, float y2) {
-		double deltaX = x1 - x2;
-		double deltaY = y1 - y2;
-		return Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-	}
-	static class Point {
-		private float x;
-		private float y;
-		
-		Point(float x, float y) {
-			this.x = x;
-			this.y = y;
-		}
-	}
-	
+
 	public static int smallest(double[] array) {
 		int result = -1;
 		double smallest = Double.MAX_VALUE;
