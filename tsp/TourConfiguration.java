@@ -7,6 +7,7 @@ public class TourConfiguration {
 
 	private final int[] solutions;
 	private final ProblemData problemData;
+	private Double tourLength;
 
 	public TourConfiguration(ProblemData problemData) {
 		solutions = new int[problemData.getProblemSize()];
@@ -25,6 +26,7 @@ public class TourConfiguration {
 	}
 	public void setStep(int index, int value) {
 		solutions[index] = value;
+		tourLength = null;
 	}
 
 	public boolean contains(int j) {
@@ -36,7 +38,10 @@ public class TourConfiguration {
 	}
 
 	public double calculateTourLength() {
-		return calculateTourLength(problemData.points, solutions);
+		if (tourLength == null) {
+			tourLength = calculateTourLength(problemData.points, solutions);
+		}
+		return tourLength;
 	}
 	
 	private static double calculateTourLength(List<Point> points,

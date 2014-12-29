@@ -2,10 +2,15 @@
 class Point {
 	float x;
 	float y;
+	int id = -1;
 	
 	Point(float x, float y) {
 		this.x = x;
 		this.y = y;
+	}
+	Point(float x, float y, int id) {
+		this(x, y);
+		this.id = id;
 	}
 
 	public double distance(Point point) {

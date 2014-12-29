@@ -1,13 +1,6 @@
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import com.google.common.primitives.Doubles;
-import com.google.common.primitives.Ints;
 
 
 public class Solver {
@@ -37,20 +30,53 @@ public class Solver {
 			if (arg.startsWith("-file=")) {
 				fileName = arg.substring(6);
 			}
+			if (arg.startsWith("-visual")) {
+				visualize = true;
+			}
 		}
 		if (fileName == null) {
-			System.err.println("no file");
+			System.err.println("usage: " + Solver.class.getCanonicalName() + " -file=<file> [-visual]" );
 			return;
 		}
 		
-		ProblemData problemData = getProblemDataFromFile(fileName);
-		
+		ProblemData problemData = ProblemData.getProblemDataFromFile(fileName);
 
 		TourConfiguration configuration = TourConfiguration.create(problemData);
 
 //		calculateDistanceMatrix(nodeCount, points);
 		
+		if (problemData.getProblemSize() < 2000) {
+			nearestNeighbor(problemData, configuration);
+		} else {
+			for (int i = 0; i < problemData.getProblemSize(); i++) {
+				configuration.setStep(i, i);
+			}
+		}
+		Visualization visualization = null;
+		if (visualize) {
+			visualization = new Visualization(configuration, problemData);
+		}
 		
+		configuration = twoOptAdvanced(problemData, configuration, visualization);
+//		configuration = twoOpt(problemData, configuration, visualization);
+		
+		// calculate the length of the tour
+		double obj = configuration.calculateTourLength();
+
+		// prepare the solution in the specified output format
+		System.out.println(obj + " 0");
+		for (int i = 0; i < problemData.getProblemSize(); i++) {
+			System.out.print(configuration.get(i) + " ");
+		}
+		System.out.println("");
+		
+		if (visualize) {
+			while(!visualization.isDisposed());
+		}
+	}
+
+	private static void nearestNeighbor(ProblemData problemData,
+			TourConfiguration configuration) {
 		configuration.setStep(0, 0);
 		for (int i = 1; i < problemData.getProblemSize(); i++) {
 			
@@ -64,7 +90,10 @@ public class Solver {
 			}
 			configuration.setStep(i, smallest(distances));
 		}
+	}
 
+	private static TourConfiguration twoOpt(ProblemData problemData,
+			TourConfiguration configuration, Visualization visualization) {
 		// 2-opt
 		int numberOfNodesEligibleToBeSwapped = problemData.getProblemSize();
 		int numberOfSwaps = 0;
@@ -82,27 +111,57 @@ public class Solver {
 					if (new_distance < best_distance) {
 						configuration = new_route;
 						numberOfSwaps++;
+						if (visualize) {
+							visualization.setConfiguration(configuration);
+							if (visualization.isDisposed()) {
+								return configuration;
+							}
+						}
 						continue start_again;
 					}
 				}
 			}
 			break;
 		}
-		
-		// calculate the length of the tour
-		double obj = configuration.calculateTourLength();
-
-		// prepare the solution in the specified output format
-		System.out.println(obj + " 0");
-		for (int i = 0; i < problemData.getProblemSize(); i++) {
-			System.out.print(configuration.get(i) + " ");
-		}
-		System.out.println("");
-		
-		if (visualize) {
-			Visualization visualization = new Visualization(configuration, problemData);
-			while(true);
-		}
+		return configuration;
+	}
+	public static TourConfiguration twoOptAdvanced(ProblemData problemData,
+			TourConfiguration configuration, Visualization visualization) {
+		// 2-opt
+		int numberOfNodesEligibleToBeSwapped = problemData.getProblemSize();
+		int numberOfSwaps = 0;
+		start_again:
+			while (true) {
+				int oldnumberOfSwaps = numberOfSwaps;
+				iLoop:
+				for (int i = 0; i < numberOfNodesEligibleToBeSwapped - 1; i++) {
+					if (numberOfSwaps > 10000) {
+						break;
+					}
+					double best_distance = configuration.calculateTourLength();
+					for (int k = i + 1; k < numberOfNodesEligibleToBeSwapped; k++) {
+						TourConfiguration new_route = optSwap(configuration, i, k);
+						
+						double new_distance = new_route.calculateTourLength();
+						if (new_distance < best_distance) {
+							configuration = new_route;
+							numberOfSwaps++;
+							if (visualize) {
+								visualization.setConfiguration(configuration);
+								if (visualization.isDisposed()) {
+									return configuration;
+								}
+							}
+							i--;
+							continue iLoop;
+						}
+					}
+				}
+				if (oldnumberOfSwaps == numberOfSwaps) {
+					break start_again;
+				}
+			}
+		return configuration;
 	}
 
 	private static TourConfiguration optSwap(TourConfiguration configuration,
@@ -124,36 +183,11 @@ public class Solver {
 		return new_route;
 	}
 
-	private static ProblemData getProblemDataFromFile(String fileName) throws IOException {
-		List<String> lines = new ArrayList<String>();
-
-		BufferedReader input = new BufferedReader(new FileReader(fileName));
-		try {
-			String line = null;
-			while ((line = input.readLine()) != null) {
-				lines.add(line);
-			}
-		} finally {
-			input.close();
-		}
-
-		// parse the data in the file
-		String firstLine = lines.get(0);
-		int nodeCount = Integer.parseInt(firstLine);
-		
-		
-		List<Point> points = new ArrayList<>(nodeCount);
-		for (int i = 1; i < nodeCount + 1; i++) {
-			String line = lines.get(i);
-			String[] node = line.split("\\s+");
-			points.add(new Point(Float.valueOf(node[0]), Float.valueOf(node[1])));
-		}
-		return new ProblemData(points);
-	}
 
 
 
-	private static void calculateDistanceMatrix(int nodeCount,
+
+	public static void calculateDistanceMatrix(int nodeCount,
 			List<Point> points) {
 		double [] [] distancMatrix = new double[nodeCount][nodeCount];
 		for (int i = 0; i < distancMatrix.length; i++) {
