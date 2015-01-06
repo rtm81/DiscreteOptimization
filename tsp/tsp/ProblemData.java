@@ -1,3 +1,4 @@
+package tsp;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -16,14 +17,12 @@ public class ProblemData {
 	public static ProblemData getProblemDataFromFile(String fileName) throws IOException {
 		List<String> lines = new ArrayList<String>();
 
-		BufferedReader input = new BufferedReader(new FileReader(fileName));
-		try {
+		
+		try (BufferedReader input = new BufferedReader(new FileReader(fileName))) {
 			String line = null;
 			while ((line = input.readLine()) != null) {
 				lines.add(line);
 			}
-		} finally {
-			input.close();
 		}
 
 		// parse the data in the file
@@ -42,24 +41,26 @@ public class ProblemData {
 
 	public ProblemData(List<Point> points) {
 		this.points = Collections.unmodifiableList(points);
-		Point smallest = new Point(Float.MAX_VALUE, Float.MAX_VALUE);
-		Point largest = new Point(Float.MIN_VALUE, Float.MIN_VALUE);
+		float smallestX = Float.MAX_VALUE;
+		float smallestY = Float.MAX_VALUE;
+		float largestX = Float.MIN_VALUE;
+		float largestY = Float.MIN_VALUE;
 		for (Point point : points) {
-			if (point.x > largest.x) {
-				largest.x = point.x;
+			if (point.getX() > largestX) {
+				largestX = point.getX();
 			}
-			if (point.x < smallest.x) {
-				smallest.x = point.x;
+			if (point.getX() < smallestX) {
+				smallestX = point.getX();
 			}
-			if (point.y > largest.y) {
-				largest.y = point.y;
+			if (point.getY() > largestY) {
+				largestY = point.getY();
 			}
-			if (point.y < smallest.y) {
-				smallest.y = point.y;
+			if (point.getY() < smallestY) {
+				smallestY = point.getY();
 			}
 		}
-		this.smallest = smallest;
-		this.largest = largest;
+		this.smallest = new Point(smallestX, smallestY);
+		this.largest = new Point(largestX, largestY);
 	}
 	
 	public int getProblemSize(){
@@ -77,4 +78,6 @@ public class ProblemData {
 	public Point getLargest() {
 		return largest;
 	}
+	
+
 }
