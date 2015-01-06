@@ -3,12 +3,14 @@ package algorithm;
 import tsp.ProblemData;
 import tsp.TSPSolver.ConfigurationChangedListener;
 import tsp.TourConfiguration;
+import tsp.TourConfigurationCollection;
 
 public class TwoOptAdvanced extends TwoOpt {
 
 	@Override
-	public TourConfiguration calculate(ProblemData problemData,
-			TourConfiguration configuration) {
+	public TourConfigurationCollection calculate(ProblemData problemData,
+			TourConfigurationCollection tourConfigurationCollection) {
+		TourConfiguration configuration = tourConfigurationCollection.getFittest();
 		// 2-opt
 		int numberOfNodesEligibleToBeSwapped = problemData.getProblemSize();
 		int numberOfSwaps = 0;
@@ -30,7 +32,7 @@ public class TwoOptAdvanced extends TwoOpt {
 							numberOfSwaps++;
 							for (ConfigurationChangedListener configurationChangedListener : listener) {
 								if (configurationChangedListener.changePerformed(configuration)) {
-									return configuration;
+									return tourConfigurationCollection;
 								}
 							}
 							i--;
@@ -42,7 +44,7 @@ public class TwoOptAdvanced extends TwoOpt {
 					break start_again;
 				}
 			}
-		return configuration;
+		return tourConfigurationCollection;
 	}
 	
 }

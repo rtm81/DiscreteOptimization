@@ -6,6 +6,7 @@ import java.util.List;
 import tsp.ProblemData;
 import tsp.TSPSolver.ConfigurationChangedListener;
 import tsp.TourConfiguration;
+import tsp.TourConfigurationCollection;
 
 public class TwoOpt implements OptimizeStrategy {
 	
@@ -19,8 +20,9 @@ public class TwoOpt implements OptimizeStrategy {
 		listener.addAll(listeners);
 	}
 	
-	public TourConfiguration calculate(ProblemData problemData,
-			TourConfiguration configuration) {
+	public TourConfigurationCollection calculate(ProblemData problemData,
+			TourConfigurationCollection tourConfigurationCollection) {
+		TourConfiguration configuration = tourConfigurationCollection.getFittest();
 		// 2-opt
 		int numberOfNodesEligibleToBeSwapped = problemData.getProblemSize();
 		int numberOfSwaps = 0;
@@ -41,7 +43,7 @@ public class TwoOpt implements OptimizeStrategy {
 						
 						for (ConfigurationChangedListener configurationChangedListener : listener) {
 							if (configurationChangedListener.changePerformed(configuration)) {
-								return configuration;
+								return tourConfigurationCollection;
 							}
 						}
 						
@@ -51,7 +53,7 @@ public class TwoOpt implements OptimizeStrategy {
 			}
 			break;
 		}
-		return configuration;
+		return tourConfigurationCollection;
 	}
 	
 	protected TourConfiguration optSwap(TourConfiguration configuration,

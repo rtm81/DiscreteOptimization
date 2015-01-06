@@ -19,7 +19,7 @@ public class GA {
     }
     
     public GA () {
-    	this(0.015d, 5, true);
+    	this(0.001d, 5, true);
     }
 	
     public Population evolvePopulation(Population population) {
@@ -51,11 +51,12 @@ public class GA {
         }
         double newTourLength = newPopulation.getTourLength();
         
-        if (newTourLength < givenTourLength) {
-        	return newPopulation;
-        } else {
-        	return population;
-        }
+        return newPopulation;
+//        if (newTourLength < givenTourLength) {
+//        	return newPopulation;
+//        } else {
+//        	return population;
+//        }
     	
     }
     

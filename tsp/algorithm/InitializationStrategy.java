@@ -1,8 +1,8 @@
 package algorithm;
 
-import tsp.TourConfiguration;
+import tsp.TourConfigurationCollection;
 
 public interface InitializationStrategy {
 
-	public TourConfiguration calculate();
+	public TourConfigurationCollection calculate();
 }

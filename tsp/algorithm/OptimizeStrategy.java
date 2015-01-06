@@ -4,12 +4,12 @@ import java.util.List;
 
 import tsp.ProblemData;
 import tsp.TSPSolver.ConfigurationChangedListener;
-import tsp.TourConfiguration;
+import tsp.TourConfigurationCollection;
 
 public interface OptimizeStrategy {
 
-	public TourConfiguration calculate(ProblemData problemData,
-			TourConfiguration configuration);
+	public TourConfigurationCollection calculate(ProblemData problemData,
+			TourConfigurationCollection configuration);
 
 	public void addListener(List<ConfigurationChangedListener> listener);
 }

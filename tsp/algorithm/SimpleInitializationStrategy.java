@@ -2,6 +2,7 @@ package algorithm;
 
 import tsp.ProblemData;
 import tsp.TourConfiguration;
+import tsp.TourConfigurationCollection;
 
 public class SimpleInitializationStrategy implements InitializationStrategy {
 
@@ -12,12 +13,14 @@ public class SimpleInitializationStrategy implements InitializationStrategy {
 	}
 	
 	@Override
-	public TourConfiguration calculate() {
+	public TourConfigurationCollection calculate() {
+		TourConfigurationCollection tourConfigurationCollection = new TourConfigurationCollection();
 		TourConfiguration configuration = TourConfiguration.create(problemData);
 		for (int i = 0; i < problemData.getProblemSize(); i++) {
 			configuration.setStep(i, i);
 		}
-		return configuration;
+		tourConfigurationCollection.addTour(configuration);
+		return tourConfigurationCollection;
 	}
 
 }

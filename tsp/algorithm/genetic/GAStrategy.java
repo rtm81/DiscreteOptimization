@@ -6,6 +6,7 @@ import java.util.List;
 import tsp.ProblemData;
 import tsp.TSPSolver.ConfigurationChangedListener;
 import tsp.TourConfiguration;
+import tsp.TourConfigurationCollection;
 import algorithm.OptimizeStrategy;
 
 public class GAStrategy implements OptimizeStrategy {
@@ -13,14 +14,16 @@ public class GAStrategy implements OptimizeStrategy {
 	List<ConfigurationChangedListener> listener = new ArrayList<>();
 	
 	@Override
-	public TourConfiguration calculate(ProblemData problemData,
-			TourConfiguration configuration) {
-		GA ga = new GA(0.015d, 5, false);
-		Population population = new Population();
-		population.addTour(configuration);
-		for (int i = 0; i < 50; i++) {
-			population.addTour(TourConfiguration.createRandom(problemData));
-		}
+	public TourConfigurationCollection calculate(ProblemData problemData,
+			TourConfigurationCollection configuration) {
+		Population population = new Population(configuration);
+//		int missingNumber = 50 - population.populationSize();
+//		for (int i = 0; i < missingNumber; i++) {
+//			population.addTour(TourConfiguration.createRandom(problemData));
+//		}
+		GA ga = new GA(1.0d / (problemData.getProblemSize() * population.populationSize() * 5)
+				, 5
+				, false);
 		
 		for (int i = 0; i < 100; i++) {
 			population = ga.evolvePopulation(population);
@@ -29,7 +32,7 @@ public class GAStrategy implements OptimizeStrategy {
 				configurationChangedListener.changePerformed(population.getFittest());
 			}
 		}
-		return population.getFittest();
+		return population;
 	}
 
 	@Override

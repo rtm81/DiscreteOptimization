@@ -2,6 +2,7 @@ package algorithm;
 
 import tsp.ProblemData;
 import tsp.TourConfiguration;
+import tsp.TourConfigurationCollection;
 
 public class NearestNeighbor implements InitializationStrategy {
 
@@ -24,7 +25,8 @@ public class NearestNeighbor implements InitializationStrategy {
 	}
 
 	@Override
-	public TourConfiguration calculate() {
+	public TourConfigurationCollection calculate() {
+		TourConfigurationCollection tourConfigurationCollection = new TourConfigurationCollection();
 		TourConfiguration configuration = TourConfiguration.create(problemData);
 		configuration.setStep(0, 0);
 		for (int i = 1; i < problemData.getProblemSize(); i++) {
@@ -39,6 +41,7 @@ public class NearestNeighbor implements InitializationStrategy {
 			}
 			configuration.setStep(i, getIndexOfSmallestValue(distances));
 		}
-		return configuration;
+		tourConfigurationCollection.addTour(configuration);
+		return tourConfigurationCollection;
 	}
 }

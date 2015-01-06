@@ -6,7 +6,6 @@ import java.util.List;
 import algorithm.InitializationStrategy;
 import algorithm.OptimizeStrategy;
 import algorithm.SortedDistance;
-import algorithm.TwoOpt;
 import algorithm.TwoOptAdvanced;
 import algorithm.genetic.GAStrategy;
 
@@ -29,21 +28,23 @@ public class TSPSolver {
 	}
 
 	public TourConfiguration solve(ProblemData problemData) {
-		TourConfiguration configuration = init(problemData);
+		TourConfigurationCollection tourConfigurationCollection = init(problemData);
 		
 		for (ConfigurationChangedListener configurationChangedListener : listener) {
-			if (configurationChangedListener.changePerformed(configuration)) {
-				return configuration;
+			if (configurationChangedListener.changePerformed(tourConfigurationCollection.getFittest())) {
+				return tourConfigurationCollection.getFittest();
 			}
 		}
 		
-		configuration = calculate(problemData, configuration);
-		return configuration;
+		tourConfigurationCollection = calculate(problemData, tourConfigurationCollection);
+		return tourConfigurationCollection.getFittest();
 	}
 
-	public TourConfiguration calculate(ProblemData problemData,
-			TourConfiguration configuration) {
-		OptimizeStrategy twoOpt = new GAStrategy();
+	public TourConfigurationCollection calculate(ProblemData problemData,
+			TourConfigurationCollection configuration) {
+		OptimizeStrategy twoOpt =
+				new TwoOptAdvanced();
+//				new GAStrategy();
 //				new TwoOpt();
 
 		twoOpt.addListener(listener);
@@ -52,7 +53,7 @@ public class TSPSolver {
 		return configuration;
 	}
 
-	public TourConfiguration init(ProblemData problemData) {
+	public TourConfigurationCollection init(ProblemData problemData) {
 		final InitializationStrategy initializationStrategy;
 		SortedDistance sortedDistance = new SortedDistance(problemData);
 		sortedDistance.addListener(listener);
@@ -61,8 +62,7 @@ public class TSPSolver {
 		} else {
 			initializationStrategy = sortedDistance;
 		}
-		TourConfiguration configuration = initializationStrategy.calculate();
-		return configuration;
+		return initializationStrategy.calculate();
 	}
 
 	

@@ -3,7 +3,7 @@ import java.io.IOException;
 import tsp.ProblemData;
 import tsp.TSPSolver;
 import tsp.TourConfiguration;
-import tsp.TSPSolver.ConfigurationChangedListener;
+import tsp.TourConfigurationCollection;
 import tsp.vis.awt.Visualization;
 
 
@@ -74,9 +74,9 @@ public class Solver {
 			}
 		});
 		
-		TourConfiguration configuration = tspSolver.init(problemData);
+		TourConfigurationCollection configuration = tspSolver.init(problemData);
 		
-		visualization.setConfiguration(configuration);
+		visualization.setConfiguration(configuration.getFittest());
 		
 		configuration = tspSolver.calculate(problemData, configuration);
 		
