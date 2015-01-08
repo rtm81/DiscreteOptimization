@@ -21,8 +21,7 @@ public class TSPSolverTest {
 		// for precise test timing
 		for (int i = 0; i < 10; i++) {
 			ProblemData problemData = createProblemData("tsp_100_1");
-			TSPSolver tspSolver = new TSPSolver();
-			tspSolver.solve(problemData);
+			solve(problemData, Double.MAX_VALUE);
 		}
 	}
 
@@ -44,9 +43,7 @@ public class TSPSolverTest {
 	public void tsp_100_3() throws Exception {
 		ProblemData problemData = createProblemData(testname.getMethodName());
 
-		TSPSolver tspSolver = new TSPSolver();
-		TourConfiguration configuration = tspSolver.solve(problemData);
-		assertThat(configuration.calculateTourLength(), lessThan(22398.0d));
+		solve(problemData, (22398.0d));
 	}
 
 	@Test(timeout=150)
@@ -147,9 +144,9 @@ public class TSPSolverTest {
 		solve(problemData, 9675.0d);
 	}
 	
-	public void solve(ProblemData problemData, double expectedTourLength) {
-		TSPSolver tspSolver = new TSPSolver();
-		TourConfiguration configuration = tspSolver.solve(problemData);
+	public static void solve(ProblemData problemData, double expectedTourLength) {
+		TSPSolver tspSolver = new TSPSolver(problemData);
+		TourConfiguration configuration = tspSolver.solve();
 		
 		assertThat(configuration.calculateTourLength(), lessThan(expectedTourLength));
 	}

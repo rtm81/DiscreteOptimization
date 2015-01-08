@@ -8,10 +8,10 @@ import java.util.NavigableSet;
 import java.util.Random;
 import java.util.Set;
 
+import tsp.ConfigurationChangedListener;
 import tsp.Point;
 import tsp.ProblemData;
 import tsp.TourConfigurationCollection;
-import tsp.TSPSolver.ConfigurationChangedListener;
 import tsp.TourConfiguration;
 
 import com.google.common.base.Function;

@@ -1,15 +1,17 @@
 import java.io.IOException;
 
+import tsp.ConfigurationChangedListener;
 import tsp.ProblemData;
 import tsp.TSPSolver;
 import tsp.TourConfiguration;
 import tsp.TourConfigurationCollection;
+import tsp.vis.VisualizationService;
 import tsp.vis.awt.Visualization;
 
 
 public class Solver {
 	
-	static boolean visualize = false;
+	
 
 	/**
 	 * The main class
@@ -28,6 +30,7 @@ public class Solver {
 	 */
 	public static void solve(String[] args) throws IOException {
 		String fileName = null;
+		boolean visualize = false;
 
 		// get the temp file name
 		for (String arg : args) {
@@ -46,39 +49,20 @@ public class Solver {
 		ProblemData problemData = ProblemData.getProblemDataFromFile(fileName);
 
 
-		TSPSolver tspSolver = new TSPSolver();
+		TSPSolver tspSolver = new TSPSolver(problemData);
 		if (visualize) {
 			solveWithVisual(problemData, tspSolver);
 		} else {
-			printSolution(solve(problemData, tspSolver));
+			printSolution(solve(tspSolver));
 		}
 	}
 	
-	private static TourConfiguration solve(ProblemData problemData, TSPSolver tspSolver) {
-		return tspSolver.solve(problemData);
+	private static TourConfiguration solve(TSPSolver tspSolver) {
+		return tspSolver.solve();
 	}
 	
-	private static void solveWithVisual(ProblemData problemData, TSPSolver tspSolver) {
-		final Visualization visualization = new Visualization(problemData);
-		
-		tspSolver.addListener(new TSPSolver.ConfigurationChangedListener() {
-			
-			@Override
-			public boolean changePerformed(TourConfiguration configuration) {
-				if (visualization.isDisposed()) {
-					return true;
-				} else {
-					visualization.setConfiguration(configuration);
-					return false;
-				}
-			}
-		});
-		
-		TourConfigurationCollection configuration = tspSolver.init(problemData);
-		
-		visualization.setConfiguration(configuration.getFittest());
-		
-		configuration = tspSolver.calculate(problemData, configuration);
+	private static void solveWithVisual(final ProblemData problemData, final TSPSolver tspSolver) {
+		final VisualizationService visualization = new tsp.vis.swt.Visualization(problemData, tspSolver);
 		
 		while(!visualization.isDisposed());
 	}

@@ -5,6 +5,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
+
 
 public class TourConfiguration {
 
@@ -12,7 +15,7 @@ public class TourConfiguration {
 	 * key - position in this tour
 	 * value - index of the point according to the ProblemData instance
 	 */
-	private final Map<Integer, Integer> solutionList = new LinkedHashMap<>();
+	private final Map<Integer, Integer> solutionList;
 	
 	
 	private final ProblemData problemData;
@@ -20,11 +23,14 @@ public class TourConfiguration {
 
 	/**
 	 * Construct an empty tour.
-	 * 
-	 * @param problemData
 	 */
 	public TourConfiguration(ProblemData problemData) {
+		this(problemData, new LinkedHashMap<Integer, Integer>());
+	}
+	
+	private TourConfiguration(ProblemData problemData, Map<Integer, Integer> solutionList) {
 		this.problemData = problemData;
+		this.solutionList = solutionList;
 	}
 
 	public static TourConfiguration create(ProblemData problemData) {
@@ -33,6 +39,10 @@ public class TourConfiguration {
 
 	public static TourConfiguration create(TourConfiguration configuration) {
 		return new TourConfiguration(configuration.problemData);
+	}
+	
+	public TourConfiguration copy() {
+		return new TourConfiguration(this.problemData, ImmutableMap.copyOf(solutionList));
 	}
 	
     // Creates a random individual
@@ -89,7 +99,10 @@ public class TourConfiguration {
 	}
 
 	public Point getPoint(int tourPosition) {
-		int index = solutionList.get(tourPosition);
+		Integer index = solutionList.get(tourPosition);
+		if (index == null) {
+			throw new IllegalArgumentException("No position ["+tourPosition+"]");
+		}
 		return problemData.get(index);
 	}
 

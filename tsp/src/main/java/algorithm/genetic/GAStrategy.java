@@ -3,8 +3,8 @@ package algorithm.genetic;
 import java.util.ArrayList;
 import java.util.List;
 
+import tsp.ConfigurationChangedListener;
 import tsp.ProblemData;
-import tsp.TSPSolver.ConfigurationChangedListener;
 import tsp.TourConfiguration;
 import tsp.TourConfigurationCollection;
 import algorithm.OptimizeStrategy;

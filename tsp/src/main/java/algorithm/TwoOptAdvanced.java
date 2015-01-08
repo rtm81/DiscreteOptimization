@@ -1,7 +1,7 @@
 package algorithm;
 
+import tsp.ConfigurationChangedListener;
 import tsp.ProblemData;
-import tsp.TSPSolver.ConfigurationChangedListener;
 import tsp.TourConfiguration;
 import tsp.TourConfigurationCollection;
 
