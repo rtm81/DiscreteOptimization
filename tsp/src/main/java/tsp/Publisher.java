@@ -1,6 +1,10 @@
 package tsp;
 
-public interface Publisher extends Runnable {
+import java.util.List;
 
-	public void addListener(ConfigurationChangedListener configurationChangedListener);
+public interface Publisher {
+
+	public void addListener(ConfigurationChangedListener... configurationChangedListener);
+	
+	public void addListener(List<ConfigurationChangedListener> listener);
 }

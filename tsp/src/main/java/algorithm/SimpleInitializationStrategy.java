@@ -1,10 +1,11 @@
 package algorithm;
 
+import tsp.AbstractPublisher;
 import tsp.ProblemData;
 import tsp.TourConfiguration;
 import tsp.TourConfigurationCollection;
 
-public class SimpleInitializationStrategy implements InitializationStrategy {
+public class SimpleInitializationStrategy extends AbstractPublisher implements InitializationStrategy {
 
 	private final ProblemData problemData;
 	

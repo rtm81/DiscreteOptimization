@@ -30,10 +30,8 @@ public class TwoOptAdvanced extends TwoOpt {
 						if (new_distance < best_distance) {
 							configuration = new_route;
 							numberOfSwaps++;
-							for (ConfigurationChangedListener configurationChangedListener : listener) {
-								if (configurationChangedListener.changePerformed(configuration)) {
-									return tourConfigurationCollection;
-								}
+							if (notify(configuration)){
+								return tourConfigurationCollection;
 							}
 							i--;
 							continue iLoop;

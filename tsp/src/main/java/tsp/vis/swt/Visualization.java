@@ -12,31 +12,30 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 import tsp.ConfigurationChangedListener;
-import tsp.ProblemData;
-import tsp.Publisher;
+import tsp.RunnablePublisher;
 import tsp.TourConfiguration;
 import tsp.vis.ScreenPoint;
 import tsp.vis.VisualizationData;
 import tsp.vis.VisualizationData.PointsCallBack;
 import tsp.vis.VisualizationData.TourCallBack;
-import tsp.vis.VisualizationService;
 
-public class Visualization implements VisualizationService {
+public class Visualization {
 	private static final String TITLE = "TSP Configuration";
 
 	Display display;
-
 	Shell shell;
-
-	private final VisualizationData visualizationData;
-	private volatile boolean isDisposed = false;
-	private TourConfiguration configuration = null;
-	private Object syncObj = new Object();
-
 	private Canvas canvas;
 
-	public Visualization(ProblemData problemData, Publisher runnable) {
-		visualizationData = new VisualizationData(problemData);
+	private final VisualizationData visualizationData;
+	private final RunnablePublisher runnable;
+	private volatile boolean isDisposed = false;
+
+	public Visualization(VisualizationData visualizationData, RunnablePublisher runnable) {
+		this.visualizationData = visualizationData;
+		this.runnable = runnable;
+	}
+	
+	public void display() {
 		display = new Display();
 		shell = new Shell(display);
 		shell.setSize(800, 800);
@@ -60,16 +59,10 @@ public class Visualization implements VisualizationService {
 					}
 				});
 				
-				TourConfiguration configurationCopy;
-				synchronized (syncObj) {
-					if (configuration == null) {
-						return;
-					}
-					configurationCopy = configuration.copy();
-				}
+
 				
 				gc.setForeground(gc.getDevice().getSystemColor(SWT.COLOR_BLACK));
-				visualizationData.forTour(configurationCopy, clientArea.width, clientArea.height, new TourCallBack() {
+				visualizationData.forTour(clientArea.width, clientArea.height, new TourCallBack() {
 					
 					@Override
 					public void forScreenPoint(ScreenPoint screenPoint) {
@@ -91,18 +84,21 @@ public class Visualization implements VisualizationService {
 
 	    });
 		
+		
 
-		runnable.addListener(new ConfigurationChangedListener() {
+		visualizationData.addListener(new ConfigurationChangedListener() {
 			
 			@Override
 			public boolean changePerformed(TourConfiguration configuration) {
-				final TourConfiguration configurationCopy = configuration.copy();
 				if (isDisposed()) {
 					return true;
 				} else {
 					Display.getDefault().asyncExec(new Runnable() {
 						public void run() {
-							setConfiguration(configurationCopy);
+							if (isDisposed) {
+								return;
+							}
+							canvas.redraw();
 						}
 					});
 					return false;
@@ -125,18 +121,8 @@ public class Visualization implements VisualizationService {
 	}
 	
 
-	@Override
 	public boolean isDisposed() {
 		return isDisposed;
 	}
 
-	public void setConfiguration(TourConfiguration configuration) {
-		if (isDisposed) {
-			return;
-		}
-		synchronized (syncObj) {
-			this.configuration = configuration;
-		}
-		canvas.redraw();
-	}
 }

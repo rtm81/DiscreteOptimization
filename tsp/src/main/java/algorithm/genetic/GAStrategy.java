@@ -3,13 +3,13 @@ package algorithm.genetic;
 import java.util.ArrayList;
 import java.util.List;
 
+import tsp.AbstractPublisher;
 import tsp.ConfigurationChangedListener;
 import tsp.ProblemData;
-import tsp.TourConfiguration;
 import tsp.TourConfigurationCollection;
 import algorithm.OptimizeStrategy;
 
-public class GAStrategy implements OptimizeStrategy {
+public class GAStrategy extends AbstractPublisher implements OptimizeStrategy {
 
 	List<ConfigurationChangedListener> listener = new ArrayList<>();
 	
@@ -28,16 +28,11 @@ public class GAStrategy implements OptimizeStrategy {
 		for (int i = 0; i < 100; i++) {
 			population = ga.evolvePopulation(population);
 			
-			for (ConfigurationChangedListener configurationChangedListener : listener) {
-				configurationChangedListener.changePerformed(population.getFittest());
+			if (notify(population.getFittest())){
+				return population;
 			}
 		}
 		return population;
-	}
-
-	@Override
-	public void addListener(List<ConfigurationChangedListener> listeners) {
-		listener.addAll(listeners);
 	}
 
 }

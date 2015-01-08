@@ -8,15 +8,11 @@ import algorithm.OptimizeStrategy;
 import algorithm.SortedDistance;
 import algorithm.TwoOptAdvanced;
 
-public class TSPSolver implements Publisher {
-	
-	List<ConfigurationChangedListener> listener = new ArrayList<>();
+public class TSPSolver extends AbstractPublisher implements RunnablePublisher {
 	
 	private final ProblemData problemData;
 	
-	public void addListener(ConfigurationChangedListener configurationChangedListener) {
-		listener.add(configurationChangedListener);
-	}
+
 	
 	public TSPSolver(ProblemData problemData){
 		this.problemData = problemData;
@@ -25,15 +21,16 @@ public class TSPSolver implements Publisher {
 	public TourConfiguration solve() {
 		TourConfigurationCollection tourConfigurationCollection = init();
 		
-		for (ConfigurationChangedListener configurationChangedListener : listener) {
-			if (configurationChangedListener.changePerformed(tourConfigurationCollection.getFittest())) {
-				return tourConfigurationCollection.getFittest();
-			}
+		TourConfiguration fittest = tourConfigurationCollection.getFittest();
+		if (notify(fittest)) {
+			return fittest;
 		}
 		
 		tourConfigurationCollection = calculate(tourConfigurationCollection);
 		return tourConfigurationCollection.getFittest();
 	}
+
+
 
 	public TourConfigurationCollection calculate(TourConfigurationCollection configuration) {
 		OptimizeStrategy twoOpt =
@@ -41,7 +38,7 @@ public class TSPSolver implements Publisher {
 //				new GAStrategy();
 //				new TwoOpt();
 
-		twoOpt.addListener(listener);
+		forwardListener(twoOpt);
 		
 		configuration = twoOpt.calculate(problemData, configuration);
 		return configuration;
@@ -50,7 +47,7 @@ public class TSPSolver implements Publisher {
 	public TourConfigurationCollection init() {
 		final InitializationStrategy initializationStrategy;
 		SortedDistance sortedDistance = new SortedDistance(problemData);
-		sortedDistance.addListener(listener);
+		forwardListener(sortedDistance);
 		if (problemData.getProblemSize() < 2000) {
 			initializationStrategy = sortedDistance;
 		} else {

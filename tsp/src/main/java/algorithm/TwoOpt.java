@@ -3,22 +3,13 @@ package algorithm;
 import java.util.ArrayList;
 import java.util.List;
 
+import tsp.AbstractPublisher;
 import tsp.ConfigurationChangedListener;
 import tsp.ProblemData;
 import tsp.TourConfiguration;
 import tsp.TourConfigurationCollection;
 
-public class TwoOpt implements OptimizeStrategy {
-	
-	List<ConfigurationChangedListener> listener = new ArrayList<>();
-	
-	public void addListener(ConfigurationChangedListener configurationChangedListener) {
-		listener.add(configurationChangedListener);
-	}
-
-	public void addListener(List<ConfigurationChangedListener> listeners) {
-		listener.addAll(listeners);
-	}
+public class TwoOpt extends AbstractPublisher implements OptimizeStrategy {
 	
 	public TourConfigurationCollection calculate(ProblemData problemData,
 			TourConfigurationCollection tourConfigurationCollection) {
@@ -41,10 +32,8 @@ public class TwoOpt implements OptimizeStrategy {
 						configuration = new_route;
 						numberOfSwaps++;
 						
-						for (ConfigurationChangedListener configurationChangedListener : listener) {
-							if (configurationChangedListener.changePerformed(configuration)) {
-								return tourConfigurationCollection;
-							}
+						if (notify(configuration)){
+							return tourConfigurationCollection;
 						}
 						
 						continue start_again;

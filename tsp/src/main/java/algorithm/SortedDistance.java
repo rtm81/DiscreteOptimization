@@ -1,13 +1,12 @@
 package algorithm;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
-import java.util.NavigableSet;
 import java.util.Random;
 import java.util.Set;
 
+import tsp.AbstractPublisher;
 import tsp.ConfigurationChangedListener;
 import tsp.Point;
 import tsp.ProblemData;
@@ -15,11 +14,8 @@ import tsp.TourConfigurationCollection;
 import tsp.TourConfiguration;
 
 import com.google.common.base.Function;
-import com.google.common.collect.ImmutableCollection;
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.TreeMultimap;
 
-public class SortedDistance implements InitializationStrategy {
+public class SortedDistance extends AbstractPublisher implements InitializationStrategy  {
 
 	private ProblemData problemData;
 	private final DistanceMap distanceUpperRight;
@@ -33,78 +29,6 @@ public class SortedDistance implements InitializationStrategy {
 
 	public void addListener(List<ConfigurationChangedListener> listeners) {
 		listener.addAll(listeners);
-	}
-	
-	private static class DistanceMap {
-		
-		private static final Comparator<Double> doubleComparator = new Comparator<Double>() {
-
-			@Override
-			public int compare(Double o1, Double o2) {
-				return Double.compare(o1, o2);
-			}
-		};
-		
-		private static final  Comparator<Point> pointComparator = new Comparator<Point>(){
-
-			@Override
-			public int compare(Point o1, Point o2) {
-				return Integer.compare(o1.getId(), o2.getId());
-			}
-		};
-		
-		private final TreeMultimap<Double, Point> distanceOrigin = 
-				TreeMultimap.create(doubleComparator, pointComparator);
-		private final ImmutableMultimap<Point,Double> inverseDistanceOrigin;
-		
-		
-		DistanceMap(DistanceMap distanceMap) {
-			this.distanceOrigin.putAll(distanceMap.distanceOrigin);
-			this.inverseDistanceOrigin = distanceMap.inverseDistanceOrigin;
-		}
-		
-		
-		DistanceMap(ProblemData problemData, Point origin) {
-			for (int i = 0; i < problemData.getProblemSize(); i++) {
-				Point point = problemData.get(i);
-				distanceOrigin.put(point.distance(origin), point);
-			}
-			inverseDistanceOrigin = ImmutableMultimap.copyOf(distanceOrigin).inverse();
-		}
-		
-		public void remove(Point point) {
-			distanceOrigin.remove(inverseDistanceOrigin.get(point).iterator().next(), point);
-		}
-		
-		public Double get(Point point) {
-			ImmutableCollection<Double> distances = inverseDistanceOrigin.get(point);
-			if (distances.size() != 1) {
-				throw new IllegalStateException("unexpected collection: " + distances);
-			}
-			return distances.iterator().next();
-		}
-
-		public NavigableSet<Point> get(Double value) {
-			return distanceOrigin.get(value);
-		}
-		
-		public Function<Double, Double> getNextHigherDistanceProvider () {
-			return new Function<Double, Double>() {
-
-					@Override
-					public Double apply(Double higher) {
-						return distanceOrigin.keySet().higher(higher);
-					}};
-		}
-		
-		public Function<Double, Double> getNextLowerDistanceProvider () {
-			return new Function<Double, Double>() {
-
-					@Override
-					public Double apply(Double higher) {
-						return distanceOrigin.keySet().lower(higher);
-					}};
-		}
 	}
 	
 	public SortedDistance(ProblemData problemData) {
@@ -122,18 +46,20 @@ public class SortedDistance implements InitializationStrategy {
 	public TourConfigurationCollection calculate() {
 		TourConfigurationCollection tourConfigurationCollection = new TourConfigurationCollection();
 		
-		Random random = new Random();
-		for (int j = 0; j < 7; j++) {
-			int start;
-			if (j == 0) {
-				start = 0;
-			} else {
-				start = random.nextInt(problemData.getProblemSize());
-			}
-			for (int i = 1; i <= 7; i++) {
-				tourConfigurationCollection.addTour(new TourCalculation(i, start).calculateTour());
-			}
-		}
+//		Random random = new Random();
+//		for (int j = 0; j < 7; j++) {
+//			int start;
+//			if (j == 0) {
+//				start = 0;
+//			} else {
+//				start = random.nextInt(problemData.getProblemSize());
+//			}
+//			for (int i = 1; i <= 7; i++) {
+//				tourConfigurationCollection.addTour(new TourCalculation(i, start).calculateTour());
+//			}
+//		}
+		
+		tourConfigurationCollection.addTour(new TourCalculation(5, 0).calculateTour());
 		
 		return tourConfigurationCollection;
 	}
@@ -212,7 +138,6 @@ public class SortedDistance implements InitializationStrategy {
 		}
 	}
 
-
 	
 	public Point getNearest(Set<Point> neighbors, Point point) {
 		Point result = null;
@@ -227,8 +152,5 @@ public class SortedDistance implements InitializationStrategy {
 		}
 		return result;
 	}
-
-
-
 
 }

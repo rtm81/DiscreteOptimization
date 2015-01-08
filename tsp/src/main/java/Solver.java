@@ -5,8 +5,8 @@ import tsp.ProblemData;
 import tsp.TSPSolver;
 import tsp.TourConfiguration;
 import tsp.TourConfigurationCollection;
-import tsp.vis.VisualizationService;
-import tsp.vis.awt.Visualization;
+import tsp.vis.VisualizationData;
+import tsp.vis.swt.Visualization;
 
 
 public class Solver {
@@ -62,9 +62,20 @@ public class Solver {
 	}
 	
 	private static void solveWithVisual(final ProblemData problemData, final TSPSolver tspSolver) {
-		final VisualizationService visualization = new tsp.vis.swt.Visualization(problemData, tspSolver);
+		final VisualizationData visualizationData = new VisualizationData(problemData);
 		
-		while(!visualization.isDisposed());
+		tspSolver.addListener(new ConfigurationChangedListener() {
+			
+			@Override
+			public boolean changePerformed(TourConfiguration configuration) {
+				final TourConfiguration configurationCopy = configuration.copy();
+				visualizationData.setConfiguration(configurationCopy);
+				return true;
+			}
+		});
+		
+		Visualization visualization = new Visualization(visualizationData, tspSolver);
+		visualization.display();
 	}
 
 	private static void printSolution(TourConfiguration configuration) {

@@ -12,11 +12,10 @@ import tsp.TourConfiguration;
 import tsp.vis.ScreenPoint;
 import tsp.vis.VisualizationData;
 import tsp.vis.VisualizationData.TourCallBack;
-import tsp.vis.VisualizationService;
 import tsp.vis.VisualizationData.PointsCallBack;
 
-
-public class Visualization extends Frame implements VisualizationService {
+@Deprecated
+public class Visualization extends Frame {
 
 	
 	/**
@@ -93,7 +92,7 @@ public class Visualization extends Frame implements VisualizationService {
 			
 			graphics.setColor(Color.black);
 			
-			visualizationData.forTour(configurationCopy, iSizeX, iSizeY, new TourCallBack() {
+			visualizationData.forTour(iSizeX, iSizeY, new TourCallBack() {
 				
 				@Override
 				public void forScreenPoint(ScreenPoint screenPoint) {

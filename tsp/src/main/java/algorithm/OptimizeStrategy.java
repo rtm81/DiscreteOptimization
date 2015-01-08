@@ -1,15 +1,12 @@
 package algorithm;
 
-import java.util.List;
-
-import tsp.ConfigurationChangedListener;
 import tsp.ProblemData;
+import tsp.Publisher;
 import tsp.TourConfigurationCollection;
 
-public interface OptimizeStrategy {
+public interface OptimizeStrategy extends Publisher {
 
 	public TourConfigurationCollection calculate(ProblemData problemData,
 			TourConfigurationCollection configuration);
 
-	public void addListener(List<ConfigurationChangedListener> listener);
 }

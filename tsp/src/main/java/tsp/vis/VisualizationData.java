@@ -1,12 +1,16 @@
 package tsp.vis;
 
+import tsp.AbstractPublisher;
 import tsp.Point;
 import tsp.ProblemData;
 import tsp.TourConfiguration;
 
-public class VisualizationData {
+public class VisualizationData extends AbstractPublisher {
 	
 	private final ProblemData problemData;
+	private TourConfiguration configuration = null;
+	
+	private final Object syncObj = new Object();
 	
 	public VisualizationData(ProblemData problemData) {
 		this.problemData = problemData;
@@ -20,6 +24,13 @@ public class VisualizationData {
 		return screenPoint;
 	}
 	
+	public void setConfiguration(TourConfiguration configuration) {
+		synchronized (syncObj) {
+			this.configuration = configuration;
+		}
+		notify(configuration);
+	}
+	
 	public void forAllPoints (int iSizeX, int iSizeY, PointsCallBack forAllCallBack) {
 		for (int j = 0; j < problemData.getProblemSize(); j++) {
 			ScreenPoint screenPoint = getScreenPoint(iSizeX, iSizeY, problemData.get(j));
@@ -27,7 +38,14 @@ public class VisualizationData {
 		}
 	}
 	
-	public void forTour(TourConfiguration tour,int iSizeX, int iSizeY, TourCallBack callBack) {
+	public void forTour(int iSizeX, int iSizeY, TourCallBack callBack) {
+		TourConfiguration tour;
+		synchronized (syncObj) {
+			if (configuration == null) {
+				return;
+			}
+			tour = configuration.copy();
+		}
 		int size = tour.getSize();
 		if (size > 0) {
 			ScreenPoint lastPoint = getScreenPoint(iSizeX, iSizeY, tour.getPoint(size - 1));
