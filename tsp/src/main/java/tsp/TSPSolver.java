@@ -15,8 +15,6 @@ public class TSPSolver extends AbstractPublisher implements RunnablePublisher {
 	
 	private final ProblemData problemData;
 	
-
-	
 	public TSPSolver(ProblemData problemData){
 		this.problemData = problemData;
 	}
@@ -36,26 +34,20 @@ public class TSPSolver extends AbstractPublisher implements RunnablePublisher {
 
 
 	public TourConfigurationCollection calculate(TourConfigurationCollection configuration) {
-		OptimizeStrategy twoOpt =
+		OptimizeStrategy optimizeStrategy =
 				new TwoOptAdvanced();
 //				new GAStrategy();
 //				new TwoOpt();
 
-		forwardListener(twoOpt);
+		forwardListener(optimizeStrategy);
 		
-		configuration = twoOpt.calculate(problemData, configuration);
+		configuration = optimizeStrategy.calculate(problemData, configuration);
 		return configuration;
 	}
 
 	public TourConfigurationCollection init() {
-		final InitializationStrategy initializationStrategy;
-		SortedDistance sortedDistance = new SortedDistance(problemData);
-		forwardListener(sortedDistance);
-		if (problemData.getProblemSize() < 2000) {
-			initializationStrategy = sortedDistance;
-		} else {
-			initializationStrategy = sortedDistance;
-		}
+		final InitializationStrategy initializationStrategy = new SortedDistance(problemData);
+		forwardListener(initializationStrategy);
 		return initializationStrategy.calculate();
 	}
 
@@ -67,6 +59,5 @@ public class TSPSolver extends AbstractPublisher implements RunnablePublisher {
 			throwable.printStackTrace();
 		}
 	}
-
 	
 }

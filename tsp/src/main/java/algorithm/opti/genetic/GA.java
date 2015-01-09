@@ -10,19 +10,24 @@ public class GA {
     private final double mutationRate;
     private final int tournamentSize;
     private final boolean elitism;
-    private final Random random = new Random();
+    private final Random random;
     
-    public GA (double mutationRate, int tournamentSize, boolean elitism) {
+    public GA (double mutationRate, int tournamentSize, boolean elitism, Random random) {
     	this.mutationRate = mutationRate;
     	this.tournamentSize = tournamentSize;
     	this.elitism = elitism;
+    	this.random = random;
     }
     
     public GA () {
-    	this(0.001d, 5, true);
+    	this(0.001d, 5, true, new Random());
     }
 	
-    public Population evolvePopulation(Population population) {
+    public GA(double mutationRate, int tournamentSize, boolean elitism) {
+    	this(mutationRate, tournamentSize, elitism, new Random());
+	}
+
+	public Population evolvePopulation(Population population) {
     	double givenTourLength = population.getTourLength();
     	Population newPopulation = new Population();
     	

@@ -29,7 +29,7 @@ public class TourConfiguration {
 		this(problemData, new LinkedHashMap<Integer, Integer>());
 	}
 	
-	private TourConfiguration(ProblemData problemData, Map<Integer, Integer> solutionList) {
+	public TourConfiguration(ProblemData problemData, Map<Integer, Integer> solutionList) {
 		this.problemData = problemData;
 		this.solutionList = solutionList;
 	}
