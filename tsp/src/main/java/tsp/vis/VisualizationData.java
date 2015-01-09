@@ -32,8 +32,8 @@ public class VisualizationData extends AbstractPublisher {
 	}
 	
 	public void forAllPoints (int iSizeX, int iSizeY, PointsCallBack forAllCallBack) {
-		for (int j = 0; j < problemData.getProblemSize(); j++) {
-			ScreenPoint screenPoint = getScreenPoint(iSizeX, iSizeY, problemData.get(j));
+		for (Point point : problemData) {
+			ScreenPoint screenPoint = getScreenPoint(iSizeX, iSizeY, point);
 			forAllCallBack.forScreenPoint(screenPoint);
 		}
 	}
