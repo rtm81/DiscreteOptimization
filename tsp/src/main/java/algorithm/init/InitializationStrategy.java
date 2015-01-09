@@ -1,7 +1,7 @@
-package algorithm;
+package algorithm.init;
 
 import tsp.Publisher;
-import tsp.TourConfigurationCollection;
+import tsp.util.TourConfigurationCollection;
 
 public interface InitializationStrategy extends Publisher {
 

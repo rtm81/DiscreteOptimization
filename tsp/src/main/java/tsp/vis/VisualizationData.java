@@ -1,9 +1,9 @@
 package tsp.vis;
 
 import tsp.AbstractPublisher;
-import tsp.Point;
-import tsp.ProblemData;
-import tsp.TourConfiguration;
+import tsp.util.Point;
+import tsp.util.ProblemData;
+import tsp.util.TourConfiguration;
 
 public class VisualizationData extends AbstractPublisher {
 	

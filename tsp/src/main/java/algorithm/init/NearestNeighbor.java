@@ -1,9 +1,9 @@
-package algorithm;
+package algorithm.init;
 
 import tsp.AbstractPublisher;
-import tsp.ProblemData;
-import tsp.TourConfiguration;
-import tsp.TourConfigurationCollection;
+import tsp.util.ProblemData;
+import tsp.util.TourConfiguration;
+import tsp.util.TourConfigurationCollection;
 
 public class NearestNeighbor extends AbstractPublisher implements InitializationStrategy {
 

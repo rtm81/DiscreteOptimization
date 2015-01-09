@@ -1,15 +1,16 @@
-package tsp;
+package tsp.util;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 
-public class ProblemData {
+public class ProblemData implements Iterable<Point> {
 	
-	final List<Point> points;
+	private final List<Point> points;
 	private final Point smallest;
 	private final Point largest;
 	
@@ -64,11 +65,11 @@ public class ProblemData {
 	}
 	
 	public int getProblemSize(){
-		return points.size();
+		return getPoints().size();
 	}
 
 	public Point get(int i) {
-		return points.get(i);
+		return getPoints().get(i);
 	}
 
 	public Point getSmallest() {
@@ -77,6 +78,15 @@ public class ProblemData {
 
 	public Point getLargest() {
 		return largest;
+	}
+
+	@Override
+	public Iterator<Point> iterator() {
+		return getPoints().iterator();
+	}
+
+	public List<Point> getPoints() {
+		return points;
 	}
 	
 

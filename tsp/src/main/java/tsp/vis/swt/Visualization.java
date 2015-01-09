@@ -13,7 +13,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import tsp.ConfigurationChangedListener;
 import tsp.RunnablePublisher;
-import tsp.TourConfiguration;
+import tsp.util.TourConfiguration;
 import tsp.vis.ScreenPoint;
 import tsp.vis.VisualizationData;
 import tsp.vis.VisualizationData.PointsCallBack;

@@ -3,10 +3,13 @@ package tsp;
 import java.util.ArrayList;
 import java.util.List;
 
-import algorithm.InitializationStrategy;
-import algorithm.OptimizeStrategy;
-import algorithm.SortedDistance;
-import algorithm.TwoOptAdvanced;
+import tsp.util.ProblemData;
+import tsp.util.TourConfiguration;
+import tsp.util.TourConfigurationCollection;
+import algorithm.init.InitializationStrategy;
+import algorithm.init.SortedDistance;
+import algorithm.opti.OptimizeStrategy;
+import algorithm.opti.TwoOptAdvanced;
 
 public class TSPSolver extends AbstractPublisher implements RunnablePublisher {
 	

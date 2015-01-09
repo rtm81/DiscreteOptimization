@@ -1,9 +1,11 @@
-package algorithm.genetic;
+package algorithm.opti.genetic;
 
 import static org.junit.Assert.*;
 
 import org.hamcrest.Matchers;
 import org.junit.Test;
+
+import algorithm.opti.genetic.GA;
 
 
 public class GATest {

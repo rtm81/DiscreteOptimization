@@ -1,13 +1,13 @@
-package algorithm.genetic;
+package algorithm.opti.genetic;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import tsp.AbstractPublisher;
 import tsp.ConfigurationChangedListener;
-import tsp.ProblemData;
-import tsp.TourConfigurationCollection;
-import algorithm.OptimizeStrategy;
+import tsp.util.ProblemData;
+import tsp.util.TourConfigurationCollection;
+import algorithm.opti.OptimizeStrategy;
 
 public class GAStrategy extends AbstractPublisher implements OptimizeStrategy {
 

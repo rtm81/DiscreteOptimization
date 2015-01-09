@@ -1,13 +1,13 @@
-package algorithm;
+package algorithm.opti;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import tsp.AbstractPublisher;
 import tsp.ConfigurationChangedListener;
-import tsp.ProblemData;
-import tsp.TourConfiguration;
-import tsp.TourConfigurationCollection;
+import tsp.util.ProblemData;
+import tsp.util.TourConfiguration;
+import tsp.util.TourConfigurationCollection;
 
 public class TwoOpt extends AbstractPublisher implements OptimizeStrategy {
 	

@@ -7,8 +7,8 @@ import java.awt.Panel;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import tsp.ProblemData;
-import tsp.TourConfiguration;
+import tsp.util.ProblemData;
+import tsp.util.TourConfiguration;
 import tsp.vis.ScreenPoint;
 import tsp.vis.VisualizationData;
 import tsp.vis.VisualizationData.TourCallBack;

@@ -1,9 +1,9 @@
-package algorithm.genetic;
+package algorithm.opti.genetic;
 
 import java.util.Random;
 
-import tsp.TourConfiguration;
-import tsp.TourConfigurationCollection;
+import tsp.util.TourConfiguration;
+import tsp.util.TourConfigurationCollection;
 
 public class Population extends TourConfigurationCollection {
 

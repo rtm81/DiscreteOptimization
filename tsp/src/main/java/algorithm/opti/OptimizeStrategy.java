@@ -1,8 +1,8 @@
-package algorithm;
+package algorithm.opti;
 
-import tsp.ProblemData;
 import tsp.Publisher;
-import tsp.TourConfigurationCollection;
+import tsp.util.ProblemData;
+import tsp.util.TourConfigurationCollection;
 
 public interface OptimizeStrategy extends Publisher {
 

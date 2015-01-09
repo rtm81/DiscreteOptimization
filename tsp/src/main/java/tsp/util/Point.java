@@ -1,4 +1,4 @@
-package tsp;
+package tsp.util;
 
 public class Point {
 	private final float x;

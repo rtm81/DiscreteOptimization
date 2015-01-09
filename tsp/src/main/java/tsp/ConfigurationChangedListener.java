@@ -1,5 +1,7 @@
 package tsp;
 
+import tsp.util.TourConfiguration;
+
 public interface ConfigurationChangedListener {
 	
 	/**

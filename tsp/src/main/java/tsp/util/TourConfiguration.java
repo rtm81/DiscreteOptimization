@@ -1,4 +1,4 @@
-package tsp;
+package tsp.util;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 
 
@@ -53,7 +54,6 @@ public class TourConfiguration {
     	for(int i= 0; i < problemData.getProblemSize(); i++) {
     		list.add(i);
     	}
-    	// Randomly reorder the tour
     	Collections.shuffle(list);
     	
         // Loop through all our destination cities and add them to our tour
@@ -80,7 +80,7 @@ public class TourConfiguration {
 
 	public double calculateTourLength() {
 		if (tourLength == null) {
-			tourLength = calculateTourLength(problemData.points, solutionList);
+			tourLength = calculateTourLength(problemData.getPoints(), solutionList);
 		}
 		return tourLength;
 	}

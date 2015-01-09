@@ -1,17 +1,14 @@
-package algorithm;
+package tsp.util;
 
 import java.util.Comparator;
 import java.util.NavigableSet;
-
-import tsp.Point;
-import tsp.ProblemData;
 
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.TreeMultimap;
 
-class DistanceMap {
+public class DistanceMap {
 	
 	private static final Comparator<Double> doubleComparator = new Comparator<Double>() {
 
@@ -34,15 +31,14 @@ class DistanceMap {
 	private final ImmutableMultimap<Point,Double> inverseDistanceOrigin;
 	
 	
-	DistanceMap(DistanceMap distanceMap) {
+	public DistanceMap(DistanceMap distanceMap) {
 		this.distanceOrigin.putAll(distanceMap.distanceOrigin);
 		this.inverseDistanceOrigin = distanceMap.inverseDistanceOrigin;
 	}
 	
 	
-	DistanceMap(ProblemData problemData, Point origin) {
-		for (int i = 0; i < problemData.getProblemSize(); i++) {
-			Point point = problemData.get(i);
+	public DistanceMap(ProblemData problemData, Point origin) {
+		for (Point point : problemData) {
 			distanceOrigin.put(point.distance(origin), point);
 		}
 		inverseDistanceOrigin = ImmutableMultimap.copyOf(distanceOrigin).inverse();

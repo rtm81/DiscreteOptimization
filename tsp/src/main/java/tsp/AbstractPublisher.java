@@ -3,6 +3,8 @@ package tsp;
 import java.util.ArrayList;
 import java.util.List;
 
+import tsp.util.TourConfiguration;
+
 public class AbstractPublisher implements Publisher {
 	private final List<ConfigurationChangedListener> listener = new ArrayList<>();
 	

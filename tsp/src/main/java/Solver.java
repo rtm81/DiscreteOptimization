@@ -1,10 +1,10 @@
 import java.io.IOException;
 
 import tsp.ConfigurationChangedListener;
-import tsp.ProblemData;
 import tsp.TSPSolver;
-import tsp.TourConfiguration;
-import tsp.TourConfigurationCollection;
+import tsp.util.ProblemData;
+import tsp.util.TourConfiguration;
+import tsp.util.TourConfigurationCollection;
 import tsp.vis.VisualizationData;
 import tsp.vis.swt.Visualization;
 

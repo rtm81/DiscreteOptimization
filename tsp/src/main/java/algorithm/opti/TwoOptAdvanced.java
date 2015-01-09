@@ -1,9 +1,9 @@
-package algorithm;
+package algorithm.opti;
 
 import tsp.ConfigurationChangedListener;
-import tsp.ProblemData;
-import tsp.TourConfiguration;
-import tsp.TourConfigurationCollection;
+import tsp.util.ProblemData;
+import tsp.util.TourConfiguration;
+import tsp.util.TourConfigurationCollection;
 
 public class TwoOptAdvanced extends TwoOpt {
 

@@ -1,4 +1,4 @@
-package algorithm;
+package algorithm.init;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -8,10 +8,11 @@ import java.util.Set;
 
 import tsp.AbstractPublisher;
 import tsp.ConfigurationChangedListener;
-import tsp.Point;
-import tsp.ProblemData;
-import tsp.TourConfigurationCollection;
-import tsp.TourConfiguration;
+import tsp.util.DistanceMap;
+import tsp.util.Point;
+import tsp.util.ProblemData;
+import tsp.util.TourConfiguration;
+import tsp.util.TourConfigurationCollection;
 
 import com.google.common.base.Function;
 

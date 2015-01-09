@@ -1,8 +1,8 @@
-package algorithm.genetic;
+package algorithm.opti.genetic;
 
 import java.util.Random;
 
-import tsp.TourConfiguration;
+import tsp.util.TourConfiguration;
 
 
 public class GA {

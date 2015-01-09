@@ -2,8 +2,9 @@ package algorithm;
 
 import java.util.Arrays;
 
-import tsp.ProblemData;
+import tsp.util.ProblemData;
 
+@Deprecated
 public class DistanceMatrix {
 
 	public double [] [] calculate(ProblemData problemData) {
