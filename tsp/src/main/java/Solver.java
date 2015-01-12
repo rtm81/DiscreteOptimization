@@ -70,7 +70,7 @@ public class Solver {
 			public boolean changePerformed(TourConfiguration configuration) {
 				final TourConfiguration configurationCopy = configuration.copy();
 				visualizationData.setConfiguration(configurationCopy);
-				return true;
+				return false;
 			}
 		});
 		

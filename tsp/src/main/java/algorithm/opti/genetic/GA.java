@@ -11,12 +11,14 @@ public class GA {
     private final int tournamentSize;
     private final boolean elitism;
     private final Random random;
+    private final Crossover crossover;
     
     public GA (double mutationRate, int tournamentSize, boolean elitism, Random random) {
     	this.mutationRate = mutationRate;
     	this.tournamentSize = tournamentSize;
     	this.elitism = elitism;
     	this.random = random;
+    	this.crossover = new Crossover(random);
     }
     
     public GA () {
@@ -45,7 +47,7 @@ public class GA {
             TourConfiguration parent1 = population.selectMember();
             TourConfiguration parent2 = population.selectMember();
             // Crossover parents
-            TourConfiguration child = crossover(parent1, parent2);
+            TourConfiguration child = crossover.crossover(parent1, parent2);
             // Add child to new population
             newPopulation.addTour(child);
         }

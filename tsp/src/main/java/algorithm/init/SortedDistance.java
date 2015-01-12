@@ -47,18 +47,18 @@ public class SortedDistance extends AbstractPublisher implements InitializationS
 	public TourConfigurationCollection calculate() {
 		TourConfigurationCollection tourConfigurationCollection = new TourConfigurationCollection();
 		
-//		Random random = new Random();
-//		for (int j = 0; j < 7; j++) {
-//			int start;
-//			if (j == 0) {
-//				start = 0;
-//			} else {
-//				start = random.nextInt(problemData.getProblemSize());
-//			}
-//			for (int i = 1; i <= 7; i++) {
-//				tourConfigurationCollection.addTour(new TourCalculation(i, start).calculateTour());
-//			}
-//		}
+		Random random = new Random();
+		for (int j = 0; j < 7; j++) {
+			int start;
+			if (j == 0) {
+				start = 0;
+			} else {
+				start = random.nextInt(problemData.getProblemSize());
+			}
+			for (int i = 1; i <= 7; i++) {
+				tourConfigurationCollection.addTour(new TourCalculation(i, start).calculateTour());
+			}
+		}
 		
 		tourConfigurationCollection.addTour(new TourCalculation(5, 0).calculateTour());
 		

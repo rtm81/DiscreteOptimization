@@ -10,6 +10,7 @@ import algorithm.init.InitializationStrategy;
 import algorithm.init.SortedDistance;
 import algorithm.opti.OptimizeStrategy;
 import algorithm.opti.TwoOptAdvanced;
+import algorithm.opti.genetic.GAStrategy;
 
 public class TSPSolver extends AbstractPublisher implements RunnablePublisher {
 	
@@ -35,8 +36,8 @@ public class TSPSolver extends AbstractPublisher implements RunnablePublisher {
 
 	public TourConfigurationCollection calculate(TourConfigurationCollection configuration) {
 		OptimizeStrategy optimizeStrategy =
-				new TwoOptAdvanced();
-//				new GAStrategy();
+//				new TwoOptAdvanced();
+				new GAStrategy();
 //				new TwoOpt();
 
 		forwardListener(optimizeStrategy);
