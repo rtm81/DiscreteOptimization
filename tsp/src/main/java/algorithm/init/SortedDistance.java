@@ -22,16 +22,6 @@ public class SortedDistance extends AbstractPublisher implements InitializationS
 	private final DistanceMap distanceUpperRight;
 	private final DistanceMap distanceOrigin;
 	
-	List<ConfigurationChangedListener> listener = new ArrayList<>();
-	
-	public void addListener(ConfigurationChangedListener configurationChangedListener) {
-		listener.add(configurationChangedListener);
-	}
-
-	public void addListener(List<ConfigurationChangedListener> listeners) {
-		listener.addAll(listeners);
-	}
-	
 	public SortedDistance(ProblemData problemData) {
 		this.problemData = problemData;
 		
@@ -103,9 +93,7 @@ public class SortedDistance extends AbstractPublisher implements InitializationS
 			sessionDistanceUpperRight.remove(point);
 			configuration.setStep(index, point.getId());
 			
-			for (ConfigurationChangedListener configurationChangedListener : listener) {
-				configurationChangedListener.changePerformed(configuration);
-			}
+			SortedDistance.this.notify(configuration);
 		}
 		
 		private Point findNextNearest(

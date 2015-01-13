@@ -2,10 +2,11 @@ package algorithm.opti.genetic;
 
 import java.util.Random;
 
+import tsp.AbstractPublisher;
 import tsp.util.TourConfiguration;
 
 
-public class GA {
+public class GA extends AbstractPublisher {
 
     private final double mutationRate;
     private final int tournamentSize;

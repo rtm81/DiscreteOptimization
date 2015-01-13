@@ -1,12 +1,9 @@
 import java.io.IOException;
 
-import tsp.ConfigurationChangedListener;
 import tsp.TSPSolver;
 import tsp.util.ProblemData;
 import tsp.util.TourConfiguration;
-import tsp.util.TourConfigurationCollection;
-import tsp.vis.VisualizationData;
-import tsp.vis.swt.Visualization;
+import tsp.vis.swt.Starter;
 
 
 public class Solver {
@@ -30,53 +27,28 @@ public class Solver {
 	 */
 	public static void solve(String[] args) throws IOException {
 		String fileName = null;
-		boolean visualize = false;
 
 		// get the temp file name
 		for (String arg : args) {
 			if (arg.startsWith("-file=")) {
 				fileName = arg.substring(6);
 			}
-			if (arg.startsWith("-visual")) {
-				visualize = true;
-			}
 		}
+		
 		if (fileName == null) {
-			System.err.println("usage: " + Solver.class.getCanonicalName() + " -file=<file> [-visual]" );
+			System.err.println("usage: " + Solver.class.getCanonicalName() + " -file=<file>" );
 			return;
 		}
 		
 		ProblemData problemData = ProblemData.getProblemDataFromFile(fileName);
-
-
 		TSPSolver tspSolver = new TSPSolver(problemData);
-		if (visualize) {
-			solveWithVisual(problemData, tspSolver);
-		} else {
-			printSolution(solve(tspSolver));
-		}
+		printSolution(solve(tspSolver));
 	}
 	
 	private static TourConfiguration solve(TSPSolver tspSolver) {
 		return tspSolver.solve();
 	}
 	
-	private static void solveWithVisual(final ProblemData problemData, final TSPSolver tspSolver) {
-		final VisualizationData visualizationData = new VisualizationData(problemData);
-		
-		tspSolver.addListener(new ConfigurationChangedListener() {
-			
-			@Override
-			public boolean changePerformed(TourConfiguration configuration) {
-				final TourConfiguration configurationCopy = configuration.copy();
-				visualizationData.setConfiguration(configurationCopy);
-				return false;
-			}
-		});
-		
-		Visualization visualization = new Visualization(visualizationData, tspSolver);
-		visualization.display();
-	}
 
 	private static void printSolution(TourConfiguration configuration) {
 		// calculate the length of the tour

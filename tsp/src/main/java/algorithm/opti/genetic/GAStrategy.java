@@ -1,18 +1,12 @@
 package algorithm.opti.genetic;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import tsp.AbstractPublisher;
-import tsp.ConfigurationChangedListener;
 import tsp.util.ProblemData;
 import tsp.util.TourConfigurationCollection;
 import algorithm.opti.OptimizeStrategy;
 
 public class GAStrategy extends AbstractPublisher implements OptimizeStrategy {
 
-	List<ConfigurationChangedListener> listener = new ArrayList<>();
-	
 	@Override
 	public TourConfigurationCollection calculate(ProblemData problemData,
 			TourConfigurationCollection configuration) {
