@@ -39,11 +39,11 @@ public class TourConfiguration {
 	}
 
 	public static TourConfiguration create(TourConfiguration configuration) {
-		return new TourConfiguration(configuration.problemData);
+		return new TourConfiguration(configuration.getProblemData());
 	}
 	
 	public TourConfiguration copy() {
-		return new TourConfiguration(this.problemData, ImmutableMap.copyOf(solutionList));
+		return new TourConfiguration(this.getProblemData(), ImmutableMap.copyOf(solutionList));
 	}
 	
     // Creates a random individual
@@ -80,7 +80,7 @@ public class TourConfiguration {
 
 	public double calculateTourLength() {
 		if (tourLength == null) {
-			tourLength = calculateTourLength(problemData.getPoints(), solutionList);
+			tourLength = calculateTourLength(getProblemData().getPoints(), solutionList);
 		}
 		return tourLength;
 	}
@@ -103,13 +103,17 @@ public class TourConfiguration {
 		if (index == null) {
 			throw new IllegalArgumentException("No position ["+tourPosition+"]");
 		}
-		return problemData.get(index);
+		return getProblemData().get(index);
 	}
 
 
 	@Override
 	public String toString() {
 		return "" + calculateTourLength();
+	}
+
+	public ProblemData getProblemData() {
+		return problemData;
 	}
 	
 }

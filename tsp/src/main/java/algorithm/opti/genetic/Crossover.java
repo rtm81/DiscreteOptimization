@@ -43,11 +43,17 @@ public class Crossover {
 		}
 		
 		int startPosition = random.nextInt(problemSize);
+		
+		System.out.println("length: " + length);
+		System.out.println("startPosition: " + startPosition);
 
 		TourConfiguration child = TourConfiguration.create(parent1);
 
 		final Integer startPoint = parent1.get(startPosition);
 		final Integer endPoint = parent1.get((startPosition + length - 1) % problemSize);
+		
+		System.out.println("startPoint: " + parent1.getPoint(startPosition));
+		System.out.println("endPoint: " + parent1.getPoint((startPosition + length - 1) % problemSize));
 		
 		int childIndex = 0;
 		Set<Integer> parent1SubTour = new HashSet<>();

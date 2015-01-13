@@ -8,12 +8,16 @@ import tsp.util.TourConfiguration;
 public class VisualizationData extends AbstractPublisher {
 	
 	private final ProblemData problemData;
-	private TourConfiguration configuration = null;
+	private TourConfiguration configuration;
 	
 	private final Object syncObj = new Object();
 	
-	public VisualizationData(ProblemData problemData) {
+	public VisualizationData(ProblemData problemData, TourConfiguration configuration) {
 		this.problemData = problemData;
+		this.configuration = configuration;
+	}
+	public VisualizationData(ProblemData problemData) {
+		this(problemData, null);
 	}
 
 	public ScreenPoint getScreenPoint(int iSizeX, int iSizeY, Point point) {

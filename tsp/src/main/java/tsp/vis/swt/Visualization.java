@@ -3,11 +3,16 @@ package tsp.vis.swt;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
 
 import tsp.vis.ScreenPoint;
@@ -26,8 +31,14 @@ public class Visualization {
 
 	private Shell shell;
 
+	private String title;
+
 	public Visualization(VisualizationData visualizationData) {
+		this(visualizationData, TITLE);
+	}
+	public Visualization(VisualizationData visualizationData, String title) {
 		this.visualizationData = visualizationData;
+		this.title = title;
 	}
 
 	public void display() {
@@ -41,12 +52,55 @@ public class Visualization {
 	public void display(final Shell shell) {
 		this.shell = shell;
 		shell.setSize(800, 800);
-		shell.setText(TITLE);
+		shell.setText(title);
 		shell.setLayout(new FillLayout());
 
 		canvas = new Canvas(shell, SWT.NONE);
 		canvas.addPaintListener(new PaintListenerImplementation());
 
+		Menu menuBar = shell.getMenu();
+		if (menuBar == null) {
+			menuBar = new Menu(shell, SWT.BAR);
+			shell.setMenuBar(menuBar);
+		}
+		MenuItem windowMenuHeader = new MenuItem(menuBar, SWT.CASCADE);
+		windowMenuHeader.setText("&Window");
+		
+		Menu windowMenu = new Menu(shell, SWT.DROP_DOWN);
+		windowMenuHeader.setMenu(windowMenu);
+		
+		MenuItem smallItem = new MenuItem(windowMenu, SWT.PUSH);
+		smallItem.setText("Small");
+		smallItem.addSelectionListener(new SelectionAdapter() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				shell.setSize(300, 300);
+			}
+		});
+		MenuItem alignItem = new MenuItem(windowMenu, SWT.PUSH);
+		alignItem.setText("Small");
+		alignItem.addSelectionListener(new SelectionAdapter() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Shell[] shells = Display.getCurrent().getShells();
+				for (int i = 0; i < shells.length; i++) {
+					shells[i].setSize(300, 300);
+					
+					Monitor primary = Display.getCurrent().getPrimaryMonitor();
+				    Rectangle bounds = primary.getBounds();
+				    Rectangle rect = shell.getBounds();
+				    
+				    int x = bounds.x + (300 * i);
+				    int y = bounds.y;
+				    
+				    shell.setLocation(x, y);
+				}
+			}
+		});
+		
+		
 		shell.open();
 		while (!shell.isDisposed()) {
 			if (!shell.getDisplay().readAndDispatch())
@@ -100,8 +154,8 @@ public class Visualization {
 				
 				@Override
 				public void forTourLength(double tourLength) {
-					gc.drawString("" + tourLength, 100, 100);
-					shell.setText(TITLE + " " + tourLength);
+//					gc.drawString("" + tourLength, 100, 100);
+					shell.setText(title + " " + tourLength);
 				}
 			});
 		}
