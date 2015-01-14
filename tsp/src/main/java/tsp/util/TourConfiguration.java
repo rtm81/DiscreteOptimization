@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Maps;
 
 
 public class TourConfiguration {
@@ -109,7 +107,9 @@ public class TourConfiguration {
 
 	@Override
 	public String toString() {
-		return "" + calculateTourLength();
+		return "TourConfiguration [solutionList=" + solutionList
+				+ ", problemData=" + problemData + ", tourLength=" + calculateTourLength()
+				+ "]";
 	}
 
 	public ProblemData getProblemData() {

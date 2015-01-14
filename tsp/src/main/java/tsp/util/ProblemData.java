@@ -88,6 +88,10 @@ public class ProblemData implements Iterable<Point> {
 	public List<Point> getPoints() {
 		return points;
 	}
-	
 
+	@Override
+	public String toString() {
+		return "ProblemData [points=" + points + "]";
+	}
+	
 }
