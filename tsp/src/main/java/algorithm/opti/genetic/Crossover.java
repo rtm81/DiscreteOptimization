@@ -44,6 +44,8 @@ public class Crossover {
 		
 		int startPosition = random.nextInt(problemSize);
 		
+		System.out.println("parent1: " + parent1);
+		System.out.println("parent2: " + parent2);
 		System.out.println("length: " + length);
 		System.out.println("startPosition: " + startPosition);
 
@@ -64,6 +66,46 @@ public class Crossover {
 			parent1SubTour.add(parent1Point);
 		}
 		
+		int parent2Index = 0;
+		List<Integer> currentParent2Tour = new ArrayList<>();
+		List<List<Integer>> allParent2Tours = new ArrayList<>();
+		State state = State.UNKNOWN;
+		for(; parent2Index < problemSize; parent2Index++) {
+			Integer parent2Point = parent2.get(parent2Index % problemSize);
+			if (parent2Point.equals(endPoint)) {
+				state = State.OUTSIDE;
+//				continue;
+			}
+			if (parent2Point.equals(startPoint)) {
+				state = State.INSIDE;
+				continue;
+			}
+//			if (state == State.UNKNOWN) {
+//				continue;
+//			}
+			if (parent1SubTour.contains(parent2Point)) {
+				if (!currentParent2Tour.isEmpty()) {
+					allParent2Tours.add(currentParent2Tour);
+					currentParent2Tour = new ArrayList<>();
+				}
+			} else {
+				currentParent2Tour.add(parent2Point);
+			}
+		}
+		if (!currentParent2Tour.isEmpty()) {
+			allParent2Tours.add(currentParent2Tour);
+			currentParent2Tour = new ArrayList<>();
+		}
+		
+//		simpleAlgorithm(parent2, problemSize, child, startPoint, endPoint,
+//				childIndex, parent1SubTour);
+		
+		return child;
+	}
+
+	public void simpleAlgorithm(TourConfiguration parent2, int problemSize,
+			TourConfiguration child, final Integer startPoint,
+			final Integer endPoint, int childIndex, Set<Integer> parent1SubTour) {
 		class Bla {
 			int parent2TourIndex;
 			double distance;
@@ -140,7 +182,5 @@ public class Crossover {
 		for (int i = 0; i < parent2Tour.size(); i++, childIndex++) {
 			child.setStep(childIndex, parent2Tour.get(i));
 		}
-		
-		return child;
 	}
 }
