@@ -45,4 +45,19 @@ public class TourConfigurationCollection {
 		}
 		return fittest;
 	}
+	
+	public TourConfiguration getMostUnfitting() {
+		if (population.isEmpty()) {
+			throw new IllegalStateException("population is empty");
+		}
+		
+		TourConfiguration mostUnfitting = population.get(0);
+		for (TourConfiguration tourConfiguration : population) {
+			if (tourConfiguration.calculateTourLength() > mostUnfitting
+					.calculateTourLength()) {
+				mostUnfitting = tourConfiguration;
+			}
+		}
+		return mostUnfitting;
+	}
 }

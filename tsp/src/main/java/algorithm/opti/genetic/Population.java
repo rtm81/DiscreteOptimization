@@ -48,7 +48,17 @@ public class Population extends TourConfigurationCollection {
 	}
 
 	public double calculateFitness(TourConfiguration tourConfiguration) {
-		return 1.0d / tourConfiguration.calculateTourLength();
+		TourConfiguration fittest = getFittest();
+		TourConfiguration mostUnfitting = getMostUnfitting();
+		double fittestLength = fittest.calculateTourLength();
+		double mostUnfittingLength = mostUnfitting.calculateTourLength();
+		double lowerBound = fittestLength;
+		double upperBound = mostUnfittingLength + 0.1d * (mostUnfittingLength - fittestLength);
+		
+		double currentTourLength = tourConfiguration.calculateTourLength();
+		double result = 1.0d - (currentTourLength - fittestLength) / (upperBound - fittestLength);
+		
+		return result;
 	}
 	
     public TourConfiguration getRandomTour() {
