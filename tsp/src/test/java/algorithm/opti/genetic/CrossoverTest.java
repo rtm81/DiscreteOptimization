@@ -131,6 +131,15 @@ public class CrossoverTest {
 		Mockito.when(random.nextInt(50)).thenReturn(31);
 		
 		TourConfiguration child = crossover.crossover(parent1, parent2);
+		Display display = new Display();
+        Visualization.visualize(parent1, "parent1");
+        Visualization.visualize(parent2, "parent2");
+        Visualization.visualize(child, "child");
+		while (!display.isDisposed()) {
+			if (!display.readAndDispatch())
+				display.sleep();
+		}
+		display.dispose();
         System.out.println("" + child);
 	}
 

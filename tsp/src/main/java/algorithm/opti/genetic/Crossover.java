@@ -10,6 +10,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.TreeMap;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.TreeMultimap;
 
 import tsp.util.Point;
@@ -57,32 +58,75 @@ public class Crossover {
 		System.out.println("startPoint: " + parent1.getPoint(startPosition));
 		System.out.println("endPoint: " + parent1.getPoint((startPosition + length - 1) % problemSize));
 		
-		int childIndex = 0;
-		Set<Integer> parent1SubTour = new HashSet<>();
-		for(int parent1Index = startPosition; parent1Index < startPosition + length - 1 /* the last is not added */; 
-				parent1Index++, childIndex++) {
-			Integer parent1Point = parent1.get(parent1Index % problemSize);
-			child.setStep(childIndex, parent1Point);
-			parent1SubTour.add(parent1Point);
+		Set<Integer> parent1SubTour = setParent1Steps(parent1, problemSize, length,
+				startPosition, child);
+		
+		int childIndex = parent1SubTour.size();
+		
+		System.out.println(childIndex);
+		
+		Map<Point, List<Integer>> connectionPoints = calculateConnectionPoints(
+				parent2, problemSize, startPoint, endPoint, parent1SubTour);
+		
+		Point currentPoint = parent1.getPoint(startPosition);
+		List<Integer> parent2Tour = calculateShortestTour(parent2,
+				connectionPoints, currentPoint);
+		
+		
+//		List<Integer> parent2Tour = simpleAlgorithm(parent2, problemSize, child, startPoint, endPoint,
+//				childIndex, parent1SubTour);
+		
+		for (int i = 0; i < parent2Tour.size(); i++, childIndex++) {
+			child.setStep(childIndex, parent2Tour.get(i));
 		}
 		
+		return child;
+	}
+
+	public List<Integer> calculateShortestTour(TourConfiguration parent2,
+			Map<Point, List<Integer>> connectionPoints, Point currentPoint) {
+		List<Integer> parent2Tour = new ArrayList<>();
+		
+		while (!connectionPoints.isEmpty()) {
+			
+			Point nearestToCurrent = null;
+			double nearestDistance = Double.MAX_VALUE;
+			for (Point point : connectionPoints.keySet()) {
+				double distanceToPoint = currentPoint.distance(point);
+				if (distanceToPoint < nearestDistance) {
+					nearestToCurrent = point;
+					nearestDistance = distanceToPoint;
+				}
+			}
+			
+			List<Integer> list = connectionPoints.remove(nearestToCurrent);
+			if (list.get(0).equals(nearestToCurrent.getId())) {
+				parent2Tour.addAll(list);
+				currentPoint = parent2.getProblemData().get(list.get(list.size() - 1));
+			} else {
+				parent2Tour.addAll(Lists.reverse(list));
+				currentPoint = parent2.getProblemData().get(list.get(0));
+			}
+			connectionPoints.remove(currentPoint);
+		}
+		return parent2Tour;
+	}
+
+	public Map<Point, List<Integer>> calculateConnectionPoints(
+			TourConfiguration parent2, int problemSize,
+			final Integer startPoint, final Integer endPoint,
+			Set<Integer> parent1SubTour) {
 		int parent2Index = 0;
 		List<Integer> currentParent2Tour = new ArrayList<>();
 		List<List<Integer>> allParent2Tours = new ArrayList<>();
-		State state = State.UNKNOWN;
 		for(; parent2Index < problemSize; parent2Index++) {
 			Integer parent2Point = parent2.get(parent2Index % problemSize);
 			if (parent2Point.equals(endPoint)) {
-				state = State.OUTSIDE;
-//				continue;
-			}
-			if (parent2Point.equals(startPoint)) {
-				state = State.INSIDE;
 				continue;
 			}
-//			if (state == State.UNKNOWN) {
-//				continue;
-//			}
+			if (parent2Point.equals(startPoint)) {
+				continue;
+			}
 			if (parent1SubTour.contains(parent2Point)) {
 				if (!currentParent2Tour.isEmpty()) {
 					allParent2Tours.add(currentParent2Tour);
@@ -97,13 +141,28 @@ public class Crossover {
 			currentParent2Tour = new ArrayList<>();
 		}
 		
-//		simpleAlgorithm(parent2, problemSize, child, startPoint, endPoint,
-//				childIndex, parent1SubTour);
-		
-		return child;
+		Map<Point, List<Integer>> connectionPoints = new HashMap<>();
+		for (List<Integer> list : allParent2Tours) {
+			connectionPoints.put(parent2.getProblemData().get(list.get(0)), list);
+			connectionPoints.put(parent2.getProblemData().get(list.get(list.size() - 1)), list);
+		}
+		return connectionPoints;
 	}
 
-	public void simpleAlgorithm(TourConfiguration parent2, int problemSize,
+	public Set<Integer> setParent1Steps(TourConfiguration parent1, int problemSize,
+			int length, int startPosition, TourConfiguration child) {
+		Set<Integer> parent1SubTour = new HashSet<>();
+		int childIndex = 0;
+		for(int parent1Index = startPosition; parent1Index < startPosition + length; 
+				parent1Index++, childIndex++) {
+			Integer parent1Point = parent1.get(parent1Index % problemSize);
+			child.setStep(childIndex, parent1Point);
+			parent1SubTour.add(parent1Point);
+		}
+		return parent1SubTour;
+	}
+
+	public List<Integer> simpleAlgorithm(TourConfiguration parent2, int problemSize,
 			TourConfiguration child, final Integer startPoint,
 			final Integer endPoint, int childIndex, Set<Integer> parent1SubTour) {
 		class Bla {
@@ -178,9 +237,6 @@ public class Crossover {
 			parent2Tour.add(entry.getKey() + blub, entry.getValue());
 			blub++;
 		}
-		
-		for (int i = 0; i < parent2Tour.size(); i++, childIndex++) {
-			child.setStep(childIndex, parent2Tour.get(i));
-		}
+		return parent2Tour;
 	}
 }

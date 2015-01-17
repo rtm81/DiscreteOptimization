@@ -54,9 +54,9 @@ public class GA extends AbstractPublisher {
             TourConfiguration child = crossover.crossover(parent1, parent2);
             // Add child to new population
             newPopulation.addTour(child);
-            visualize(parent1, "parent1");
-            visualize(parent2, "parent2");
-            visualize(child, "child");
+//            Visualization.visualize(parent1, "parent1");
+//            Visualization.visualize(parent2, "parent2");
+//            Visualization.visualize(child, "child");
             System.out.println("hier");
         }
         
@@ -75,21 +75,7 @@ public class GA extends AbstractPublisher {
     	
     }
 
-	public void visualize(final TourConfiguration tour, final String title) {
-		
-		final Display display = Display.getDefault();
-		
-		display.asyncExec(new Runnable() {
-			
-			@Override
-			public void run() {
-				VisualizationData visualizationData = new VisualizationData(tour.getProblemData(), tour);
-				Visualization visualization = new Visualization(visualizationData, title);
-				visualization.display(display);
-			}
-		});
-		
-	}
+
     
     // Applies crossover to a set of parents and creates offspring
     public TourConfiguration crossover(TourConfiguration parent1, TourConfiguration parent2) {
