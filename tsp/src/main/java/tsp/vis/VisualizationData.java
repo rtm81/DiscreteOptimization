@@ -38,7 +38,7 @@ public class VisualizationData extends AbstractPublisher {
 	public void forAllPoints (int iSizeX, int iSizeY, PointsCallBack forAllCallBack) {
 		for (Point point : problemData) {
 			ScreenPoint screenPoint = getScreenPoint(iSizeX, iSizeY, point);
-			forAllCallBack.forScreenPoint(screenPoint);
+			forAllCallBack.forScreenPoint(screenPoint, point.getId());
 		}
 	}
 	
@@ -54,8 +54,9 @@ public class VisualizationData extends AbstractPublisher {
 		if (size > 0) {
 			ScreenPoint lastPoint = getScreenPoint(iSizeX, iSizeY, tour.getPoint(size - 1));
 			for (int j = 0; j < size; j++) {
-				ScreenPoint screenPoint = getScreenPoint(iSizeX, iSizeY, tour.getPoint(j));
-				callBack.forScreenPoint(screenPoint);
+				Point point = tour.getPoint(j);
+				ScreenPoint screenPoint = getScreenPoint(iSizeX, iSizeY, point);
+				callBack.forScreenPoint(screenPoint, point.getId());
 				callBack.forLine(lastPoint, screenPoint);
 				lastPoint = screenPoint;
 			}
@@ -65,7 +66,7 @@ public class VisualizationData extends AbstractPublisher {
 	}
 	
 	public interface PointsCallBack {
-		public void forScreenPoint(ScreenPoint screenPoint);
+		public void forScreenPoint(ScreenPoint screenPoint, int id);
 	}
 	
 	public interface TourCallBack extends PointsCallBack{

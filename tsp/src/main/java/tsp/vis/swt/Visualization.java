@@ -15,6 +15,7 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
 
+import tsp.util.TourConfiguration;
 import tsp.vis.ScreenPoint;
 import tsp.vis.VisualizationData;
 import tsp.vis.VisualizationData.PointsCallBack;
@@ -79,7 +80,7 @@ public class Visualization {
 			}
 		});
 		MenuItem alignItem = new MenuItem(windowMenu, SWT.PUSH);
-		alignItem.setText("Small");
+		alignItem.setText("Align");
 		alignItem.addSelectionListener(new SelectionAdapter() {
 			
 			@Override
@@ -129,9 +130,10 @@ public class Visualization {
 					new PointsCallBack() {
 				
 				@Override
-				public void forScreenPoint(ScreenPoint screenPoint) {
+				public void forScreenPoint(ScreenPoint screenPoint, int id) {
 					gc.drawOval((int) screenPoint.x - 1,
 							(int) screenPoint.y - 1, 2, 2);
+					gc.drawText("" +id, (int)screenPoint.x + 5, (int)screenPoint.y + 5);
 				}
 			});
 			
@@ -140,7 +142,7 @@ public class Visualization {
 					new TourCallBack() {
 				
 				@Override
-				public void forScreenPoint(ScreenPoint screenPoint) {
+				public void forScreenPoint(ScreenPoint screenPoint, int id) {
 					gc.drawOval((int) screenPoint.x - 3,
 							(int) screenPoint.y - 3, 6, 6);
 				}
@@ -159,5 +161,21 @@ public class Visualization {
 				}
 			});
 		}
+	}
+	
+	public static void visualize(final TourConfiguration tour, final String title) {
+		
+		final Display display = Display.getDefault();
+		
+		display.asyncExec(new Runnable() {
+			
+			@Override
+			public void run() {
+				VisualizationData visualizationData = new VisualizationData(tour.getProblemData(), tour);
+				Visualization visualization = new Visualization(visualizationData, title);
+				visualization.display(display);
+			}
+		});
+		
 	}
 }

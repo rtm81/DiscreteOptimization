@@ -73,7 +73,7 @@ public class Visualization extends Frame {
 			visualizationData.forAllPoints(iSizeX, iSizeY, new PointsCallBack() {
 
 				@Override
-				public void forScreenPoint(ScreenPoint screenPoint) {
+				public void forScreenPoint(ScreenPoint screenPoint, int id) {
 					graphics.drawOval((int) screenPoint.x - 1,
 							(int) screenPoint.y - 1, 2, 2);
 				}
@@ -95,7 +95,7 @@ public class Visualization extends Frame {
 			visualizationData.forTour(iSizeX, iSizeY, new TourCallBack() {
 				
 				@Override
-				public void forScreenPoint(ScreenPoint screenPoint) {
+				public void forScreenPoint(ScreenPoint screenPoint, int id) {
 					graphics.drawOval((int)screenPoint.x - 3, (int)screenPoint.y-3, 6, 6);
 				}
 				
