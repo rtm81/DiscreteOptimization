@@ -1,5 +1,8 @@
 package tsp.vis.swt;
 
+import java.util.Map;
+import java.util.Map.Entry;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
@@ -163,6 +166,17 @@ public class Visualization {
 		}
 	}
 	
+	public static void visualize(Map<TourConfiguration, String > tours) {
+		Display display = new Display();
+		for (Entry<TourConfiguration, String> entry: tours.entrySet()) {
+			visualize(entry.getKey(), entry.getValue());
+		}
+		while (!display.isDisposed()) {
+			if (!display.readAndDispatch())
+				display.sleep();
+		}
+		display.dispose();
+	}
 	public static void visualize(final TourConfiguration tour, final String title) {
 		
 		final Display display = Display.getDefault();

@@ -2,11 +2,8 @@ package algorithm.opti.genetic;
 
 import java.util.Random;
 
-import org.eclipse.swt.widgets.Display;
-
 import tsp.AbstractPublisher;
 import tsp.util.TourConfiguration;
-import tsp.vis.VisualizationData;
 import tsp.vis.swt.Visualization;
 
 
@@ -54,16 +51,17 @@ public class GA extends AbstractPublisher {
             TourConfiguration child = crossover.crossover(parent1, parent2);
             // Add child to new population
             newPopulation.addTour(child);
-//            Visualization.visualize(parent1, "parent1");
-//            Visualization.visualize(parent2, "parent2");
-//            Visualization.visualize(child, "child");
-            System.out.println("hier");
+			Visualization.visualize(parent1, "parent1");
+			Visualization.visualize(parent2, "parent2");
+			Visualization.visualize(child, "child");
+			System.out.println("hier");
         }
         
         // Mutate the new population a bit to add some new genetic material
         for (int i = elitismOffset; i < newPopulation.populationSize(); i++) {
             mutate(newPopulation.getTour(i));
         }
+		double oldTourLength = population.getTourLength();
         double newTourLength = newPopulation.getTourLength();
         
         return newPopulation;
