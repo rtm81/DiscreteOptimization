@@ -115,5 +115,39 @@ public class TourConfiguration {
 	public ProblemData getProblemData() {
 		return problemData;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((problemData == null) ? 0 : problemData.hashCode());
+		result = prime * result
+				+ ((solutionList == null) ? 0 : solutionList.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		TourConfiguration other = (TourConfiguration) obj;
+		if (problemData == null) {
+			if (other.problemData != null)
+				return false;
+		} else if (!problemData.equals(other.problemData))
+			return false;
+		if (solutionList == null) {
+			if (other.solutionList != null)
+				return false;
+		} else if (!solutionList.equals(other.solutionList))
+			return false;
+		return true;
+	}
+
 	
 }
