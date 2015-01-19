@@ -97,7 +97,7 @@ public class TourConfiguration {
 	}
 
 	public Point getPoint(int tourPosition) {
-		Integer index = solutionList.get(tourPosition);
+		Integer index = get(tourPosition);
 		if (index == null) {
 			throw new IllegalArgumentException("No position ["+tourPosition+"]");
 		}
