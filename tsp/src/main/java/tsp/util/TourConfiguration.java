@@ -68,12 +68,34 @@ public class TourConfiguration {
 		tourLength = null;
 	}
 
+	public void setSteps(int startTourPosition, List<Integer> pointIndexes) {
+		for (Integer pointIndex : pointIndexes) {
+			solutionList.put(startTourPosition++, pointIndex);
+		}
+		tourLength = null;
+	}
+
 	public boolean contains(int pointIndex) {
 		return solutionList.containsValue(pointIndex);
 	}
 
 	public Integer get(int tourPosition) {
 		return solutionList.get(tourPosition);
+	}
+
+	public List<Integer> getSteps() {
+		List<Integer> result = new ArrayList<Integer>();
+		for (Integer pointIndex : solutionList.values()) {
+			result.add(pointIndex);
+		}
+		return result;
+	}
+	public List<Integer> getSteps(int startTourPosition, int length) {
+		List<Integer> result = new ArrayList<Integer>();
+		for (int i = startTourPosition; i < startTourPosition + length; i++) {
+			result.add(solutionList.get(i));
+		}
+		return result;
 	}
 
 	public double calculateTourLength() {

@@ -1,6 +1,5 @@
 package algorithm.opti.genetic;
 
-import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Random;
@@ -11,8 +10,6 @@ import org.slf4j.LoggerFactory;
 
 import tsp.util.Point;
 import tsp.util.TourConfiguration;
-
-import com.google.common.collect.Collections2;
 
 public class Crossover {
 
@@ -69,7 +66,7 @@ public class Crossover {
 		LOGGER.debug("childIndex: {}", childIndex);
 		
 		CrossoverTour2Strategie connectionPointsStrategy = 
-				new ConnectionPointsStrategy();
+ new ConnectionPointsPermutationStrategy();
 		List<Integer> parent2Tour = connectionPointsStrategy.calc(parent2,
 				problemSize, startPointIndex, endPointIndex, childIndex, parent1SubTour);
 		
@@ -99,7 +96,5 @@ public class Crossover {
 		return result;
 	}
 
-	public static <E> Collection<List<E>> generatePerm(List<E> original) {
-		return Collections2.permutations(original);
-	}
+
 }

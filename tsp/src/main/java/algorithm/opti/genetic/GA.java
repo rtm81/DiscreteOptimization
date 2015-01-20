@@ -4,7 +4,6 @@ import java.util.Random;
 
 import tsp.AbstractPublisher;
 import tsp.util.TourConfiguration;
-import tsp.vis.swt.Visualization;
 
 
 public class GA extends AbstractPublisher {
@@ -51,9 +50,9 @@ public class GA extends AbstractPublisher {
             TourConfiguration child = crossover.crossover(parent1, parent2);
             // Add child to new population
             newPopulation.addTour(child);
-			Visualization.visualize(parent1, "parent1");
-			Visualization.visualize(parent2, "parent2");
-			Visualization.visualize(child, "child");
+			// Visualization.visualize(parent1, "parent1");
+			// Visualization.visualize(parent2, "parent2");
+			// Visualization.visualize(child, "child");
 			System.out.println("hier");
         }
         

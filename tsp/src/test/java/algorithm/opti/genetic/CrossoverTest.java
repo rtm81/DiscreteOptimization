@@ -20,7 +20,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import tsp.util.Point;
 import tsp.util.ProblemData;
 import tsp.util.TourConfiguration;
-import tsp.vis.swt.Visualization;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -160,14 +159,10 @@ public class CrossoverTest {
 
 		TourConfiguration child = crossover.crossover(parent1, parent2);
 
-		Visualization.visualize(ImmutableMap.of(parent1, "parent1", parent2,
-				"parent2", child, "child"));
+		// Visualization.visualize(ImmutableMap.of(parent1, "parent1", parent2,
+		// "parent2", child, "child"));
 
-		String expectedSolutionString2 = "0=47, 1=27, 2=30, 3=19, 4=7, 5=13, 6=43, 7=14, 8=17, 9=22, 10=1, 11=25, 12=20, 13=37, 14=21, 15=29, 16=42, 17=11, 18=40, 19=18, 20=16, 21=44, 22=15, 23=38, 24=50, 25=39, 26=31, 27=49, 28=48, 29=32, 30=0, 31=33, 32=26, 33=6, 34=36, 35=12, 36=41, 37=24, 38=34, 39=23, 40=35, 41=4, 42=8, 43=46, 44=3, 45=10, 46=9, 47=45, 48=28, 49=2, 50=5";
-		TourConfiguration expectedChild = new TourConfiguration(problemData,
-				parseTourSolution(expectedSolutionString2));
-
-		assertThat(child.calculateTourLength(), is(Matchers.lessThan(27394.0d)));
+		assertThat(child.calculateTourLength(), is(Matchers.lessThan(25807.5d)));
 	}
 
 	public Map<Integer, Integer> parseTourSolution(String solutionString1) {

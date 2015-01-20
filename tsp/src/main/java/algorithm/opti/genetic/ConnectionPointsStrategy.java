@@ -32,7 +32,6 @@ public class ConnectionPointsStrategy implements
 		return parent2Tour;
 	}
 
-
 	protected Map<Point, List<Integer>> calculateConnectionPoints(
 			TourConfiguration parent2, List<List<Integer>> allParent2Tours) {
 		Map<Point, List<Integer>> connectionPoints = new HashMap<>();
