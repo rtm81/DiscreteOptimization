@@ -56,7 +56,8 @@ public class Population extends TourConfigurationCollection {
 		double upperBound = mostUnfittingLength + 0.1d * (mostUnfittingLength - fittestLength);
 		
 		double currentTourLength = tourConfiguration.calculateTourLength();
-		double result = 1.0d - (currentTourLength - fittestLength) / (upperBound - fittestLength);
+		double result = 1.0d - (currentTourLength - lowerBound)
+				/ (upperBound - lowerBound);
 		
 		return result;
 	}

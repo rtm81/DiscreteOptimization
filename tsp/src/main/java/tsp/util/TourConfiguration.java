@@ -2,6 +2,7 @@ package tsp.util;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -68,7 +69,7 @@ public class TourConfiguration {
 		tourLength = null;
 	}
 
-	public void setSteps(int startTourPosition, List<Integer> pointIndexes) {
+	public void setSteps(int startTourPosition, Iterable<Integer> pointIndexes) {
 		for (Integer pointIndex : pointIndexes) {
 			solutionList.put(startTourPosition++, pointIndex);
 		}
@@ -90,10 +91,19 @@ public class TourConfiguration {
 		}
 		return result;
 	}
-	public List<Integer> getSteps(int startTourPosition, int length) {
+
+	public LinkedHashSet<Integer> getSteps(int startTourPosition, int length) {
+		LinkedHashSet<Integer> result = new LinkedHashSet<Integer>();
+		for (int i = startTourPosition; i < startTourPosition + length; i++) {
+			result.add(solutionList.get(i % solutionList.size()));
+		}
+		return result;
+	}
+
+	public List<Integer> getStepsList(int startTourPosition, int length) {
 		List<Integer> result = new ArrayList<Integer>();
 		for (int i = startTourPosition; i < startTourPosition + length; i++) {
-			result.add(solutionList.get(i));
+			result.add(solutionList.get(i % solutionList.size()));
 		}
 		return result;
 	}

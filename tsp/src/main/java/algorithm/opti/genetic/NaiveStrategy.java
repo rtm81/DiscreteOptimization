@@ -22,9 +22,12 @@ public class NaiveStrategy implements CrossoverTour2Strategie {
 
 	@Override
 	public List<Integer> calc(TourConfiguration parent2,
-			int problemSize, final Integer startPoint,
-			final Integer endPoint, int childIndex,
-			Set<Integer> parent1SubTour) {
+			final Integer startPoint,
+			final Integer endPoint, Set<Integer> parent1SubTour) {
+
+		int problemSize = parent2.getSize();
+		int childIndex = parent1SubTour.size();
+
 		class Bla {
 			int parent2TourIndex;
 			double distance;
@@ -78,7 +81,6 @@ public class NaiveStrategy implements CrossoverTour2Strategie {
 					missingPossibleMatches.put(parent2Point, new Bla(size,
 							lastPoint.distance(point)));
 				}
-				// parent2Tour.add(parent2Point);
 			}
 		}
 		

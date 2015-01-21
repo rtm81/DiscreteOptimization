@@ -53,88 +53,21 @@ public class GA extends AbstractPublisher {
 			// Visualization.visualize(parent1, "parent1");
 			// Visualization.visualize(parent2, "parent2");
 			// Visualization.visualize(child, "child");
-			System.out.println("hier");
         }
         
         // Mutate the new population a bit to add some new genetic material
-        for (int i = elitismOffset; i < newPopulation.populationSize(); i++) {
-            mutate(newPopulation.getTour(i));
-        }
+		for (TourConfiguration tourConfiguration : newPopulation) {
+			mutate(tourConfiguration);
+		}
+
 		double oldTourLength = population.getTourLength();
         double newTourLength = newPopulation.getTourLength();
         
         return newPopulation;
-//        if (newTourLength < givenTourLength) {
-//        	return newPopulation;
-//        } else {
-//        	return population;
-//        }
     	
     }
 
 
-    
-    // Applies crossover to a set of parents and creates offspring
-    public TourConfiguration crossover(TourConfiguration parent1, TourConfiguration parent2) {
-        // Create new child tour
-        TourConfiguration child = TourConfiguration.create(parent1);
-
-        
-        // Get start and end sub tour positions for parent1's tour
-        int startPos = random.nextInt(parent1.getSize());
-        int endPos = random.nextInt(parent1.getSize());
-
-        // Loop and add the sub tour from parent1 to our child
-        for (int i = 0; i < parent1.getSize(); i++) {
-            if (isInSubTour(startPos, endPos, parent1.getSize(), i)) {
-            	child.setStep(i, parent1.get(i));
-            }
-        }
-
-        // Loop through parent2's city tour
-        for (int i = 0; i < parent2.getSize(); i++) {
-            // If child doesn't have the city add it
-            if (child.contains(parent2.get(i))) {
-            	continue;
-            }
-            // Loop to find a spare position in the child's tour
-            for (int ii = 0; ii < parent2.getSize(); ii++) {
-                // Spare position found, add city
-                if (child.get(ii) == null) {
-                    child.setStep(ii, parent2.get(i));
-                    break;
-                }
-            }
-        }
-        return child;
-    }
-
-	protected boolean isInSubTour(int startPos, int endPos,
-			int i) {
-		// If our start position is less than the end position
-		if (startPos < endPos && i > startPos && i < endPos) {
-			return true;
-		} // If our start position is larger
-		else if (startPos > endPos) {
-		    if (!(i < startPos && i > endPos)) {
-		        return true;
-		    }
-		}
-		return false;
-	}
-    
-    // Selects candidate tour for crossover
-    private TourConfiguration tournamentSelection(Population pop) {
-        // Create a tournament population
-        Population tournament = new Population();
-        // For each place in the tournament get a random candidate tour and
-        // add it
-        for (int i = 0; i < tournamentSize; i++) {
-            tournament.addTour(pop.getRandomTour());
-        }
-        // Get the fittest tour
-        return tournament.getFittest();
-    }
     
     // Mutate a tour using swap mutation
     private void mutate(TourConfiguration tour) {
@@ -156,20 +89,4 @@ public class GA extends AbstractPublisher {
         }
     }
 
-	public boolean isInSubTour(int startPos, int length,
-			int mod, int i) {
-		i %= mod;
-		if (isBetween(startPos, startPos + length, i)) {
-			return true;
-		}
-		i += mod;
-		if (isBetween(startPos, startPos + length, i)) {
-			return true;
-		}
-		return false;
-	}
-
-	public boolean isBetween(int startPos, int endPos, int i) {
-		return i >= startPos && i < endPos;
-	}
 }

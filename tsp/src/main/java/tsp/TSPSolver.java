@@ -1,21 +1,19 @@
 package tsp;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import tsp.util.ProblemData;
 import tsp.util.TourConfiguration;
 import tsp.util.TourConfigurationCollection;
 import algorithm.init.InitializationStrategy;
 import algorithm.init.SortedDistance;
 import algorithm.opti.OptimizeStrategy;
-import algorithm.opti.TwoOptAdvanced;
 import algorithm.opti.genetic.GAStrategy;
 
 public class TSPSolver extends AbstractPublisher implements RunnablePublisher {
 	
 	private final ProblemData problemData;
 	
+	private OptimizeStrategy optimizeStrategy = new GAStrategy();
+
 	public TSPSolver(ProblemData problemData){
 		this.problemData = problemData;
 	}
@@ -35,14 +33,11 @@ public class TSPSolver extends AbstractPublisher implements RunnablePublisher {
 
 
 	public TourConfigurationCollection calculate(TourConfigurationCollection configuration) {
-		OptimizeStrategy optimizeStrategy =
-//				new TwoOptAdvanced();
-				new GAStrategy();
-//				new TwoOpt();
 
-		forwardListener(optimizeStrategy);
+		forwardListener(getOptimizeStrategy());
 		
-		configuration = optimizeStrategy.calculate(problemData, configuration);
+		configuration = getOptimizeStrategy().calculate(problemData,
+				configuration);
 		return configuration;
 	}
 
@@ -59,6 +54,14 @@ public class TSPSolver extends AbstractPublisher implements RunnablePublisher {
 		} catch (Throwable throwable) {
 			throwable.printStackTrace();
 		}
+	}
+
+	public OptimizeStrategy getOptimizeStrategy() {
+		return optimizeStrategy;
+	}
+
+	public void setOptimizeStrategy(OptimizeStrategy optimizeStrategy) {
+		this.optimizeStrategy = optimizeStrategy;
 	}
 	
 }

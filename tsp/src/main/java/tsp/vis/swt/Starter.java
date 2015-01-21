@@ -16,6 +16,10 @@ import tsp.TSPSolver;
 import tsp.util.ProblemData;
 import tsp.util.TourConfiguration;
 import tsp.vis.VisualizationData;
+import algorithm.opti.OptimizeStrategy;
+import algorithm.opti.TwoOpt;
+import algorithm.opti.TwoOptAdvanced;
+import algorithm.opti.genetic.GAStrategy;
 
 public class Starter {
 
@@ -67,7 +71,7 @@ public class Starter {
 		display.dispose();
 	}
 
-	public void startVisualization(String selected) {
+	public void startVisualization(final String selected) {
 		ProblemData problemData;
 		try {
 			problemData = ProblemData.getProblemDataFromFile(selected);
@@ -98,6 +102,7 @@ public class Starter {
 					return true;
 				} else {
 					Display.getDefault().asyncExec(new Runnable() {
+						@Override
 						public void run() {
 							if (visualization.isDisposed()) {
 								return;
@@ -118,19 +123,31 @@ public class Starter {
 		Menu fileMenu = new Menu(newShell, SWT.DROP_DOWN);
 		fileMenuHeader.setMenu(fileMenu);
 
-		MenuItem fileSaveItem = new MenuItem(fileMenu, SWT.PUSH);
-		fileSaveItem.setText("&Start");
-		fileSaveItem.addSelectionListener(new SelectionAdapter() {
-
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				Thread thread = new Thread(tspSolver);
-				thread.setName("TSP");
-				thread.start();
-			}
-		});
+		addMenuItem(selected, tspSolver, fileMenu, new GAStrategy(), "GA",
+				visualization);
+		addMenuItem(selected, tspSolver, fileMenu, new TwoOpt(), "TwoOpt",
+				visualization);
+		addMenuItem(selected, tspSolver, fileMenu, new TwoOptAdvanced(),
+				"TwoOptAdvanced", visualization);
 		newShell.setMenuBar(menuBar);
 
 		visualization.display(newShell);
+	}
+
+	protected void addMenuItem(final String selected,
+			final TSPSolver tspSolver, Menu fileMenu,
+			final OptimizeStrategy opt, final String title,
+			final Visualization visualization) {
+		MenuItem menuItem = new MenuItem(fileMenu, SWT.PUSH);
+		menuItem.setText("&Start " + title);
+		menuItem.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				tspSolver.setOptimizeStrategy(opt);
+				visualization.startThread(tspSolver, "TSP " + title + " "
+						+ selected);
+			}
+		});
 	}
 }

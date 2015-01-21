@@ -37,6 +37,8 @@ public class Visualization {
 
 	private String title;
 
+	private Thread thread;
+
 	public Visualization(VisualizationData visualizationData) {
 		this(visualizationData, TITLE);
 	}
@@ -110,6 +112,9 @@ public class Visualization {
 			if (!shell.getDisplay().readAndDispatch())
 				shell.getDisplay().sleep();
 		}
+		if (thread != null) {
+			thread.interrupt();
+		}
 		isDisposed = true;
 		shell.dispose();
 	}
@@ -124,6 +129,7 @@ public class Visualization {
 
 	private class PaintListenerImplementation implements PaintListener {
 		
+		@Override
 		public void paintControl(PaintEvent e) {
 			Rectangle clientArea = shell.getClientArea();
 			final GC gc = e.gc;
@@ -191,5 +197,11 @@ public class Visualization {
 			}
 		});
 		
+	}
+
+	public void startThread(Runnable runnable, String title) {
+		thread = new Thread(runnable);
+		thread.setName(title);
+		thread.start();
 	}
 }

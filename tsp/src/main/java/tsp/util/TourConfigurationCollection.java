@@ -1,9 +1,11 @@
 package tsp.util;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
-public class TourConfigurationCollection {
+public class TourConfigurationCollection implements Iterable<TourConfiguration> {
 
 	protected final List<TourConfiguration> population;
 	
@@ -59,5 +61,10 @@ public class TourConfigurationCollection {
 			}
 		}
 		return mostUnfitting;
+	}
+
+	@Override
+	public Iterator<TourConfiguration> iterator() {
+		return Collections.unmodifiableList(population).iterator();
 	}
 }

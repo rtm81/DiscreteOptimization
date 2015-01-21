@@ -58,18 +58,17 @@ public class Crossover {
 		LOGGER.debug("startPoint: {}", parent1.getPoint(startPosition));
 		LOGGER.debug("endPoint: {}", endPoint);
 		
-		Set<Integer> parent1SubTour = setSteps(parent1, startPosition, length,
-				problemSize, child);
+		LinkedHashSet<Integer> parent1SubTour = parent1.getSteps(startPosition, length);
+		child.setSteps(0, parent1SubTour);
 		
+		
+		CrossoverTour2Strategie connectionPointsStrategy = new ConnectionPointsPermutationStrategy();
+		List<Integer> parent2Tour = connectionPointsStrategy.calc(parent2,
+				startPointIndex, endPointIndex, parent1SubTour);
+
 		int childIndex = parent1SubTour.size();
 		
 		LOGGER.debug("childIndex: {}", childIndex);
-		
-		CrossoverTour2Strategie connectionPointsStrategy = 
- new ConnectionPointsPermutationStrategy();
-		List<Integer> parent2Tour = connectionPointsStrategy.calc(parent2,
-				problemSize, startPointIndex, endPointIndex, childIndex, parent1SubTour);
-		
 		for (int i = 0; i < parent2Tour.size(); i++, childIndex++) {
 			child.setStep(childIndex, parent2Tour.get(i));
 		}
@@ -78,22 +77,9 @@ public class Crossover {
 	}
 	
 	public interface CrossoverTour2Strategie {
-		public List<Integer> calc(TourConfiguration parent2, int problemSize,
+		public List<Integer> calc(TourConfiguration parent2,
 				final Integer startPoint, final Integer endPoint,
-				int childIndex, Set<Integer> parent1SubTour);
-	}
-
-	public Set<Integer> setSteps(TourConfiguration inputTour,
-			int startPosition, int length, int problemSize,
-			TourConfiguration outputTour) {
-		Set<Integer> result = new LinkedHashSet<>();
-		for (int currentPosition = startPosition; currentPosition < startPosition
-				+ length; currentPosition++) {
-			Integer pointIndex = inputTour.get(currentPosition % problemSize);
-			outputTour.setStep(currentPosition - startPosition, pointIndex);
-			result.add(pointIndex);
-		}
-		return result;
+				Set<Integer> parent1SubTour);
 	}
 
 

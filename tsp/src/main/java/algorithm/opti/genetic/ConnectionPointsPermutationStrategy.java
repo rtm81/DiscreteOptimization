@@ -14,18 +14,17 @@ public class ConnectionPointsPermutationStrategy extends
 		ConnectionPointsStrategy {
 
 	@Override
-	public List<Integer> calc(TourConfiguration parent2, int problemSize,
-			Integer startPointIndex, Integer endPointIndex, int childIndex,
-			Set<Integer> parent1SubTour) {
+	public List<Integer> calc(TourConfiguration parent2, Integer startPointIndex,
+			Integer endPointIndex, Set<Integer> parent1SubTour) {
+
+		int problemSize = parent2.getSize();
 
 		// Point currentPoint = parent2.getProblemData().get(endPointIndex);
 		List<List<Integer>> allParent2Tours = calculateConnectedSubtours(
 				parent2, problemSize, parent1SubTour);
 
 		if (allParent2Tours.size() > 7) {
-			return super.calc(parent2, problemSize, startPointIndex,
-					endPointIndex,
-					childIndex, parent1SubTour);
+			return super.calc(parent2, allParent2Tours, endPointIndex);
 		}
 
 		int size = allParent2Tours.size();
@@ -39,6 +38,10 @@ public class ConnectionPointsPermutationStrategy extends
 		double fittestTourLength = Double.MAX_VALUE;
 		for (List<List<Integer>> currentPermutation : permutations) {
 			for (long i = 0; i <= bin; i++) {
+				if (Thread.interrupted()) {
+					throw new RuntimeException("thread is interrupted");
+				}
+
 				TourConfiguration currentTour = TourConfiguration
 						.create(parent2.getProblemData());
 				BitSet bitSet = BitSet.valueOf(new long[] { i });
@@ -62,7 +65,7 @@ public class ConnectionPointsPermutationStrategy extends
 			}
 		}
 
-		return fittestTour.getSteps(1, fittestTour.getSize() - 2);
+		return fittestTour.getStepsList(1, fittestTour.getSize() - 2);
 	}
 
 	public static <E> Collection<List<E>> generatePerm(List<E> original) {

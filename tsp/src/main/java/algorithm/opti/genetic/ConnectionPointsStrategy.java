@@ -16,15 +16,21 @@ public class ConnectionPointsStrategy implements
 		CrossoverTour2Strategie {
 
 	@Override
-	public List<Integer> calc(TourConfiguration parent2, int problemSize,
-			Integer startPointIndex, Integer endPointIndex,
-			int childIndex,
-			Set<Integer> parent1SubTour) {
+	public List<Integer> calc(TourConfiguration parent2, Integer startPointIndex,
+			Integer endPointIndex, Set<Integer> parent1SubTour) {
 
-		Point currentPoint = parent2.getProblemData().get(endPointIndex);
+		int problemSize = parent2.getSize();
+
+
 		List<List<Integer>> allParent2Tours = calculateConnectedSubtours(
 				parent2, problemSize, parent1SubTour);
 
+		return calc(parent2, allParent2Tours, endPointIndex);
+	}
+
+	protected List<Integer> calc(TourConfiguration parent2,
+			List<List<Integer>> allParent2Tours, int endPointIndex) {
+		Point currentPoint = parent2.getProblemData().get(endPointIndex);
 		Map<Point, List<Integer>> connectionPoints = calculateConnectionPoints(
 				parent2, allParent2Tours);
 		List<Integer> parent2Tour = calculateShortestTour(parent2,
