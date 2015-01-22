@@ -1,48 +1,45 @@
 package algorithm.opti;
 
-import tsp.ConfigurationChangedListener;
 import tsp.util.ProblemData;
 import tsp.util.TourConfiguration;
-import tsp.util.TourConfigurationCollection;
 
 public class TwoOptAdvanced extends TwoOpt {
 
+
 	@Override
-	public TourConfigurationCollection calculate(ProblemData problemData,
-			TourConfigurationCollection tourConfigurationCollection) {
-		TourConfiguration configuration = tourConfigurationCollection.getFittest();
+	protected TourConfiguration twoOpt(ProblemData problemData,
+			TourConfiguration configuration) {
 		// 2-opt
 		int numberOfNodesEligibleToBeSwapped = problemData.getProblemSize();
 		int numberOfSwaps = 0;
-		start_again:
-			while (true) {
-				int oldnumberOfSwaps = numberOfSwaps;
-				iLoop:
-				for (int i = 0; i < numberOfNodesEligibleToBeSwapped - 1; i++) {
-					if (numberOfSwaps > 10000) {
-						break;
-					}
-					double best_distance = configuration.calculateTourLength();
-					for (int k = i + 1; k < numberOfNodesEligibleToBeSwapped; k++) {
-						TourConfiguration new_route = optSwap(configuration, i, k);
-						
-						double new_distance = new_route.calculateTourLength();
-						if (new_distance < best_distance) {
-							configuration = new_route;
-							numberOfSwaps++;
-							if (notify(configuration)){
-								return tourConfigurationCollection;
-							}
-							i--;
-							continue iLoop;
-						}
-					}
+		int oldnumberOfSwaps;
+		do {
+			oldnumberOfSwaps = numberOfSwaps;
+
+			iLoop: for (int i = 0; i < numberOfNodesEligibleToBeSwapped - 1; i++) {
+				if (numberOfSwaps > DEFAULT_MAX_NUMBER_OF_SWAPS) {
+					break;
 				}
-				if (oldnumberOfSwaps == numberOfSwaps) {
-					break start_again;
+				double bestDistance = configuration.calculateTourLength();
+				for (int k = i + 1; k < numberOfNodesEligibleToBeSwapped; k++) {
+					TourConfiguration swappedTour = optSwap(configuration, i, k);
+
+					double swapDistance = swappedTour.calculateTourLength();
+					if (swapDistance < bestDistance) {
+						configuration = swappedTour;
+						numberOfSwaps++;
+						if (notify(configuration)) {
+							return configuration;
+						}
+						i--;
+						continue iLoop;
+					}
 				}
 			}
-		return tourConfigurationCollection;
+		} while (oldnumberOfSwaps != numberOfSwaps);
+
+		return configuration;
 	}
 	
+
 }

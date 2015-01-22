@@ -29,6 +29,43 @@ public class TSPSolverTest {
 	}
 
 	@Test
+	public void tsp1() throws Exception {
+		ProblemData problemData = createProblemData("tsp_51_1");
+
+		solve(problemData, (430.0d));
+	}
+
+	@Test
+	public void tsp2() throws Exception {
+		ProblemData problemData = createProblemData("tsp_100_3");
+		solve(problemData, (20800.0d));
+	}
+
+	@Test
+	public void tsp3() throws Exception {
+		ProblemData problemData = createProblemData("tsp_200_2");
+		solve(problemData, (30000.0d));
+	}
+
+	@Test
+	public void tsp4() throws Exception {
+		ProblemData problemData = createProblemData("tsp_574_1");
+		solve(problemData, (37600.0d));
+	}
+
+	@Test
+	public void tsp5() throws Exception {
+		ProblemData problemData = createProblemData("tsp_1889_1");
+		solve(problemData, (323000.0d));
+	}
+
+	@Test
+	public void tsp6() throws Exception {
+		ProblemData problemData = createProblemData("tsp_33810_1");
+		solve(problemData, (78478868.0d));
+	}
+
+	@Test
 	public void tsp_100_1() throws Exception {
 		ProblemData problemData = createProblemData(testname.getMethodName());
 

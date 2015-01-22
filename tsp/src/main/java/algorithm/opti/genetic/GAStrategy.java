@@ -29,4 +29,16 @@ public class GAStrategy extends AbstractPublisher implements OptimizeStrategy {
 		return population;
 	}
 
+	@Override
+	public boolean isSolveAll() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void setSolveAll(boolean solveAll) {
+		// TODO Auto-generated method stub
+
+	}
+
 }

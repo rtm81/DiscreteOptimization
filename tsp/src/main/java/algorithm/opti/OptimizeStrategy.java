@@ -9,4 +9,7 @@ public interface OptimizeStrategy extends Publisher {
 	public TourConfigurationCollection calculate(ProblemData problemData,
 			TourConfigurationCollection configuration);
 
+	public boolean isSolveAll();
+
+	public void setSolveAll(boolean solveAll);
 }

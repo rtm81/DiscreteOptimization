@@ -30,7 +30,7 @@ public class TourConfiguration {
 	
 	public TourConfiguration(ProblemData problemData, Map<Integer, Integer> solutionList) {
 		this.problemData = problemData;
-		this.solutionList = solutionList;
+		this.solutionList = new LinkedHashMap<Integer, Integer>(solutionList);
 	}
 
 	public static TourConfiguration create(ProblemData problemData) {
@@ -182,4 +182,5 @@ public class TourConfiguration {
 	}
 
 	
+
 }

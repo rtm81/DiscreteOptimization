@@ -1,6 +1,7 @@
 package tsp.vis.swt;
 
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -41,9 +42,15 @@ public class Starter {
 		Menu menuBar = new Menu(shell, SWT.BAR);
 	    MenuItem fileMenuHeader = new MenuItem(menuBar, SWT.CASCADE);
 	    fileMenuHeader.setText("&File");
-	    
 	    Menu fileMenu = new Menu(shell, SWT.DROP_DOWN);
 	    fileMenuHeader.setMenu(fileMenu);
+		MenuItem optionsMenuHeader = new MenuItem(menuBar, SWT.CASCADE);
+		optionsMenuHeader.setText("&Options");
+		Menu optionsMenu = new Menu(shell, SWT.DROP_DOWN);
+		optionsMenuHeader.setMenu(optionsMenu);
+
+		final MenuItem multipleItem = new MenuItem(fileMenu, SWT.CHECK);
+		multipleItem.setText("&Multiple");
 
 	    MenuItem fileSaveItem = new MenuItem(fileMenu, SWT.PUSH);
 	    fileSaveItem.setText("&Open");
@@ -58,7 +65,12 @@ public class Starter {
 		        fd.setFilterExtensions(filterExt);
 		        String selected = fd.open();
 		        
-		        startVisualization(selected);
+				if (multipleItem.getSelection()) {
+					startVisualization(selected);
+					startVisualization(selected);
+				} else {
+					startVisualization(selected);
+				}
 			}
 		});
 	    
@@ -117,33 +129,52 @@ public class Starter {
 
 		Shell newShell = new Shell(display);
 		Menu menuBar = new Menu(newShell, SWT.BAR);
-		MenuItem fileMenuHeader = new MenuItem(menuBar, SWT.CASCADE);
-		fileMenuHeader.setText("&Actions");
+		MenuItem actionsMenuHeader = new MenuItem(menuBar, SWT.CASCADE);
+		actionsMenuHeader.setText("&Actions");
 
 		Menu fileMenu = new Menu(newShell, SWT.DROP_DOWN);
-		fileMenuHeader.setMenu(fileMenu);
+		actionsMenuHeader.setMenu(fileMenu);
+
+
+		MenuItem optionsMenuHeader = new MenuItem(menuBar, SWT.CASCADE);
+		optionsMenuHeader.setText("&Options");
+		Menu optionsMenu = new Menu(newShell, SWT.DROP_DOWN);
+		optionsMenuHeader.setMenu(optionsMenu);
+
+		final MenuItem menuItem = new MenuItem(optionsMenu, SWT.CHECK);
+		menuItem.setText("&Solve All");
+		final AtomicBoolean solveAll = new AtomicBoolean(
+				menuItem.getSelection());
+		menuItem.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				solveAll.set(menuItem.getSelection());
+			}
+
+		});
 
 		addMenuItem(selected, tspSolver, fileMenu, new GAStrategy(), "GA",
-				visualization);
+				visualization, solveAll);
 		addMenuItem(selected, tspSolver, fileMenu, new TwoOpt(), "TwoOpt",
-				visualization);
+				visualization, solveAll);
 		addMenuItem(selected, tspSolver, fileMenu, new TwoOptAdvanced(),
-				"TwoOptAdvanced", visualization);
+				"TwoOptAdvanced", visualization, solveAll);
 		newShell.setMenuBar(menuBar);
-
 		visualization.display(newShell);
 	}
 
 	protected void addMenuItem(final String selected,
 			final TSPSolver tspSolver, Menu fileMenu,
 			final OptimizeStrategy opt, final String title,
-			final Visualization visualization) {
+			final Visualization visualization, final AtomicBoolean solveAll) {
 		MenuItem menuItem = new MenuItem(fileMenu, SWT.PUSH);
 		menuItem.setText("&Start " + title);
 		menuItem.addSelectionListener(new SelectionAdapter() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				opt.setSolveAll(solveAll.get());
 				tspSolver.setOptimizeStrategy(opt);
 				visualization.startThread(tspSolver, "TSP " + title + " "
 						+ selected);
