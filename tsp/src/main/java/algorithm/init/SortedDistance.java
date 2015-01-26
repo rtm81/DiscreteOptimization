@@ -1,13 +1,10 @@
 package algorithm.init;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
 import tsp.AbstractPublisher;
-import tsp.ConfigurationChangedListener;
 import tsp.util.DistanceMap;
 import tsp.util.Point;
 import tsp.util.ProblemData;
@@ -19,10 +16,14 @@ import com.google.common.base.Function;
 public class SortedDistance extends AbstractPublisher implements InitializationStrategy  {
 
 	private ProblemData problemData;
-	private final DistanceMap distanceUpperRight;
-	private final DistanceMap distanceOrigin;
+	private DistanceMap distanceUpperRight;
+	private DistanceMap distanceOrigin;
+
+	public SortedDistance() {
+	}
 	
-	public SortedDistance(ProblemData problemData) {
+	@Override
+	public TourConfigurationCollection calculate(ProblemData problemData) {
 		this.problemData = problemData;
 		
 		Point origin = new Point(0.0f, 0.0f);
@@ -30,11 +31,6 @@ public class SortedDistance extends AbstractPublisher implements InitializationS
 		
 		distanceOrigin = new DistanceMap(problemData, origin);
 		distanceUpperRight = new DistanceMap(problemData, upperRight);
-	}
-	
-	
-	@Override
-	public TourConfigurationCollection calculate() {
 		TourConfigurationCollection tourConfigurationCollection = new TourConfigurationCollection();
 		
 		Random random = new Random();

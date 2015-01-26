@@ -20,8 +20,11 @@ public class TSPSolver extends AbstractPublisher implements RunnablePublisher {
 	
 	private OptimizeStrategy optimizeStrategy = new GAStrategy();
 
+	private InitializationStrategy initializationStrategy;
+
 	public TSPSolver(ProblemData problemData){
 		this.problemData = problemData;
+		this.initializationStrategy = new SortedDistance();
 	}
 
 	public TourConfiguration solve() {
@@ -46,9 +49,8 @@ public class TSPSolver extends AbstractPublisher implements RunnablePublisher {
 	}
 
 	public TourConfigurationCollection init() {
-		final InitializationStrategy initializationStrategy = new SortedDistance(problemData);
-		forwardListener(initializationStrategy);
-		return initializationStrategy.calculate();
+		forwardListener(getInitializationStrategy());
+		return getInitializationStrategy().calculate(problemData);
 	}
 
 	@Override
@@ -68,6 +70,14 @@ public class TSPSolver extends AbstractPublisher implements RunnablePublisher {
 
 	public void setOptimizeStrategy(OptimizeStrategy optimizeStrategy) {
 		this.optimizeStrategy = optimizeStrategy;
+	}
+
+	public InitializationStrategy getInitializationStrategy() {
+		return initializationStrategy;
+	}
+
+	public void setInitializationStrategy(InitializationStrategy initializationStrategy) {
+		this.initializationStrategy = initializationStrategy;
 	}
 	
 }

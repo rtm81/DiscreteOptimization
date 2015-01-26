@@ -1,8 +1,5 @@
 package tsp.vis.swt;
 
-import java.util.Map;
-import java.util.Map.Entry;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
@@ -18,7 +15,6 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
 
-import tsp.util.TourConfiguration;
 import tsp.vis.ScreenPoint;
 import tsp.vis.VisualizationData;
 import tsp.vis.VisualizationData.PointsCallBack;
@@ -35,7 +31,7 @@ public class Visualization {
 
 	private Shell shell;
 
-	private String title;
+	private final String title;
 
 	private Thread thread;
 
@@ -96,7 +92,7 @@ public class Visualization {
 					
 					Monitor primary = Display.getCurrent().getPrimaryMonitor();
 				    Rectangle bounds = primary.getBounds();
-				    Rectangle rect = shell.getBounds();
+					// Rectangle rect = shell.getBounds();
 				    
 				    int x = bounds.x + (300 * i);
 				    int y = bounds.y;
@@ -172,33 +168,6 @@ public class Visualization {
 		}
 	}
 	
-	public static void visualize(Map<TourConfiguration, String > tours) {
-		Display display = new Display();
-		for (Entry<TourConfiguration, String> entry: tours.entrySet()) {
-			visualize(entry.getKey(), entry.getValue());
-		}
-		while (!display.isDisposed()) {
-			if (!display.readAndDispatch())
-				display.sleep();
-		}
-		display.dispose();
-	}
-	public static void visualize(final TourConfiguration tour, final String title) {
-		
-		final Display display = Display.getDefault();
-		
-		display.asyncExec(new Runnable() {
-			
-			@Override
-			public void run() {
-				VisualizationData visualizationData = new VisualizationData(tour.getProblemData(), tour);
-				Visualization visualization = new Visualization(visualizationData, title);
-				visualization.display(display);
-			}
-		});
-		
-	}
-
 	public void startThread(Runnable runnable, String title) {
 		thread = new Thread(runnable);
 		thread.setName(title);

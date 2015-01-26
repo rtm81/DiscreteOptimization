@@ -7,12 +7,6 @@ import tsp.util.TourConfigurationCollection;
 
 public class NearestNeighbor extends AbstractPublisher implements InitializationStrategy {
 
-	private final ProblemData problemData;
-	
-	public NearestNeighbor(ProblemData problemData) {
-		this.problemData = problemData;
-	}
-	
 	public int getIndexOfSmallestValue(double[] array) {
 		int result = -1;
 		double smallest = Double.MAX_VALUE;
@@ -26,7 +20,7 @@ public class NearestNeighbor extends AbstractPublisher implements Initialization
 	}
 
 	@Override
-	public TourConfigurationCollection calculate() {
+	public TourConfigurationCollection calculate(ProblemData problemData) {
 		TourConfigurationCollection tourConfigurationCollection = new TourConfigurationCollection();
 		TourConfiguration configuration = TourConfiguration.create(problemData);
 		configuration.setStep(0, 0);
